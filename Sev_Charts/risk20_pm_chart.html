@@ -1,0 +1,3279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Risk 1 - Expert Severity Assessments</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        body {
+            font-family: 'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            border-radius: 8px;
+            border: 2px solid #000;
+            padding: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .banner {
+            background: #000;
+            color: white;
+            padding: 10px 20px;
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+        }
+        .chart-content {
+            padding: 15px 20px;
+            padding: 15px 20px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .chart-container {
+            position: relative;
+            height: 500px;
+            margin-top: 0px;
+        }
+        .legend {
+            margin-top: 20px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .legend-box {
+            width: 30px;
+            height: 16px;
+            border-radius: 2px;
+        }
+        .legend-line {
+            width: 30px;
+            height: 3px;
+            border-radius: 1px;
+        }
+        .controls {
+            margin-bottom: 10px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .toggle-button {
+            background: transparent;
+            color: #a32035;
+            border: none;
+            padding: 10px 0px;
+            border-radius: 0px;
+            font-family: 'Figtree', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: underline;
+            text-decoration-color: #a32035;
+            text-decoration-thickness: 2px;
+            text-underline-offset: 4px;
+        }
+        .toggle-button:hover {
+            color: #8a1b2d;
+            text-decoration-color: #8a1b2d;
+        }
+        .toggle-button.inactive {
+            text-decoration-color: #6b7280;
+            color: #6b7280;
+        }
+        .toggle-button.inactive:hover {
+            color: #4b5563;
+            text-decoration-color: #4b5563;
+        }
+        .mode-selector {
+            display: flex;
+            gap: 0;
+            border: 2px solid #a32035;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .mode-button {
+            background: white;
+            color: #a32035;
+            border: none;
+            padding: 10px 20px;
+            font-family: 'Figtree', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-right: 1px solid #a32035;
+        }
+        .mode-button:last-child {
+            border-right: none;
+        }
+        .mode-button.active {
+            background: #a32035;
+            color: white;
+        }
+        .mode-button:hover:not(.active) {
+            background: #fef2f2;
+        }
+        .severity-labels {
+            display: flex;
+            margin-top: -10px;
+            margin-bottom: 10px;
+            padding-left: 10px;
+            padding-right: 30px;
+            position: relative;
+            width: calc(100% - 40px);
+        }
+        .severity-label {
+            font-size: 17px;
+            font-weight: bold;
+            white-space: nowrap;
+            position: absolute;
+        }
+        .severity-label:nth-child(1) { left: 2%; transform: translateX(0%); }
+        .severity-label:nth-child(2) { left: 29%; transform: translateX(-50%); }
+        .severity-label:nth-child(3) { left: 52%; transform: translateX(-50%); }
+        .severity-label:nth-child(4) { left: 75%; transform: translateX(-50%); }
+        .severity-label:nth-child(5) { left: 100%; transform: translateX(-100%); }
+        .expert-tooltip {
+            position: absolute;
+            background: white;
+            border: 2px solid #000;
+            border-radius: 4px;
+            padding: 10px;
+            font-size: 12px;
+            pointer-events: none;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        .expert-tooltip.visible {
+            display: block;
+        }
+        .expert-tooltip-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .expert-tooltip-item {
+            margin: 3px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="banner">
+            7.2 AI possessing dangerous capabilities / Pragmatic mitigations
+        </div>
+
+        <div class="chart-content">
+            <div class="controls">
+                <div class="control-group">
+                    <div class="mode-selector">
+                        <button id="modeExact" class="mode-button active">Individual Probabilities</button>
+                        <button id="modeExceedance" class="mode-button">Cumulative Probabilities</button>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <button id="toggleExperts" class="toggle-button inactive">▶ Show Individual Expert Estimates</button>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="severityChart"></canvas>
+                <div id="expertTooltip" class="expert-tooltip"></div>
+            </div>
+
+            <div class="severity-labels">
+            <div class="severity-label" style="color: #28a745;">Negligible harm</div>
+            <div class="severity-label" style="color: #6c757d;">Minor harm</div>
+            <div class="severity-label" style="color: #ffc107;">Substantial harm</div>
+            <div class="severity-label" style="color: #fd7e14;">Severe harm</div>
+            <div class="severity-label" style="color: #dc3545;">Catastrophic harm</div>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <span>()% = Mean</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-line" style="background: rgba(0, 0, 0, 0.4); height: 1.5px;"></div>
+                <span>90% interval (5th-95th percentile)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-line" style="background: rgba(0, 0, 0, 0.7); height: 2.5px;"></div>
+                <span>50% interval (25th-75th percentile)</span>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <script>
+        // Data extracted from risk_number = 1, scenario = BAU
+        const expertData = [
+            {
+                        "id": "R_23VluVdsmx1nk6e",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 50.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 45.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 5.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_9hJ4jFkYAG263Zf",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 40.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 0.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_9g0VRVoDYboRpqA",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 75.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 5.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 5.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 15.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_1Ce8w52RCHQLs1p",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 50.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 0.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_7EP12mMrRq3B3VL",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 60.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 9.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 1.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 0.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_8NhcQWWB0C2wXUR",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 3.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 11.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 18.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 38.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_2imYW8oic1pydFf",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 5.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 50.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 25.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 5.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 15.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_9gwdKREqCxT0Ngt",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 2.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 33.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 5.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_2X4Xs2Gc2u2Ps0R",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 40.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 40.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 15.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 4.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 1.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_8zc3U5TmcMqq7og",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 80.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_9xx6Z344Ks6BDFP",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 5.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 40.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 5.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_8Op4ZHF9EVkCR9v",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 5.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 25.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 55.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 5.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_5OC5MATFT2ozxYL",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 50.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 20.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_55MEwF56rIEqbeh",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 5.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 25.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 35.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 25.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 10.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_1lVRJ7n4JtG9Q3f",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 1.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 85.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 4.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 0.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_916GLmWY89foLsv",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 40.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 40.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 0.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_3JVXKehXT8q7DYO",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 40.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 0.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_9H5j6VljWipW44z",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 50.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 25.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 5.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_1ur3bjw7OvpbZ9F",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 40.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 40.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 0.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_9YujmWdJKgwxF8D",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 45.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 45.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 5.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 2.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 2.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_2EniWLo9gzfQodN",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 40.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 55.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 4.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 1.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_7HnmQDLJbbnrPb7",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 40.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 0.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_4Fyv0QFJjNppuDY",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 40.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 55.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 5.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_37wHRFiFx8t4q0C",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 40.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 5.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 5.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_4BL9B4Mcty0TIzv",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 35.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 45.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 10.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_10VacK16dAn5qfK",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 5.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 27.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 38.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_3qrAUqeZTuCjQsC",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 50.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 0.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_8hFRU4ATp1M23Bx",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 20.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_2jI0LhKgFtlvZ7S",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 50.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 35.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 12.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 2.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 1.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_8FPpUPbGhnNines",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 40.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 60.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_633wkCK9enBMjWh",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 70.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 0.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_7wHmjbx2qu2BNYa",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 8.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 70.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 1.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 1.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_5rjbgIsIAXBh3Nv",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 75.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 5.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_2JLreMbbBPpbu3H",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 40.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 40.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 10.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_8GCQREtqezsRCmR",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 5.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 15.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 25.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 35.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_5o7pVCeXX7RDKTf",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 5.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 55.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 25.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 5.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_22gxPyvZwGMIDbG",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 1.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 8.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 39.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 43.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 9.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_9IZ7sa4RlJw2mtc",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 5.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 65.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 25.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 4.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 1.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_9ooq3n6fjC4cHmy",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 45.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 5.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_2duWBTTUjHh0nJ1",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 15.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 40.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 5.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_9Lhwr7eTMhlyuCt",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 50.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 50.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 0.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_7anVcJd9v9gWJhT",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 80.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 0.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_5tFpq2sqWnnlrxj",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 25.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 5.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_43omSawUHoHwbJf",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 60.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 19.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 1.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_3E6SdEAFpVD2fkY",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 57.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 13.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_4dNpnXaUaSOw32X",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 2.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 7.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 46.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 43.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 2.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_2wzTuzhRSLOyHvj",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 4.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 40.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 25.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 1.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_2DRCFVnvPT3OV15",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 15.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 15.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 30.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_42fD4QxlMGyF7ib",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 70.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 15.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 5.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_3L1iBUG6KJckTG6",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 12.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 34.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 42.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 2.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_6ff66jAuJ3tf6v2",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 50.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 20.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_3J2bE7YtFVvJDq6",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 4.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 60.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 35.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 1.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_4SdAPoDuD2rbuV9",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 0.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_3dtr7e0QxnU2D9O",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 65.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 35.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_6ur2scO3NEHsElY",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 5.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 50.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 25.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 10.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_97qcAEhxtsnf5Ez",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 40.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 25.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 5.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_3CN67q0XSqVR7c7",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 25.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 5.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_22QsOvj12vGNKnN",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 11.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 67.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 2.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_2F4Zq7xEpB5AyAf",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 15.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 25.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 20.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_5gMswojW2ThM4GB",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 4.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 15.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 50.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_6AGuKnHJicpkMgM",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 18.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 27.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 38.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 13.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 4.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_8BXXRdPcAO1nmGw",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 16.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 62.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 22.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_1eHvNBqvILFnojv",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 5.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 25.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 30.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_7GNr3V5w5iOXrTW",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 67.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 22.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 1.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_3qw4wCpUlDUqokW",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 1.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 11.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 50.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 8.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_573YIr5zS4KfuSt",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 5.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 50.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 5.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_77MoU1OqIE8f4uR",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 60.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 10.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_8kN4VMI5gbHJHvt",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 50.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 10.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_19aLd0XOxSYKJsd",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 82.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 15.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 3.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_7dN3hZJVBPeV1JM",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 1.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 77.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 2.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 0.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_2rMyy6cPKHV4WZm",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 50.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 10.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_6sPiLmQ3nwvp8Bj",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 90.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 9.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 1.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 0.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_4mWsv05SSESTaGm",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 40.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 20.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_1ynpuNGG8ScI13P",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 40.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 50.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 0.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_97JX246tdWJmyjY",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 1.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 1.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 3.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 5.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 90.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_5AgORhHULj4K4X7",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 25.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 60.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 5.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_2dFaLqAFcNmc6Ym",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 1.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 7.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 43.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 48.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 1.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_8M54vl1dHaiJE34",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 8.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 22.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 35.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 25.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 10.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_8TYo1ePrsHF1huN",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 80.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 17.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 2.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 1.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 0.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_5XdgbQWm79jM0d4",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 5.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 25.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 25.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 25.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_5emZZdT0bLfFeq2",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 50.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 50.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_3erB1ZtTuhk0ZCW",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 35.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 45.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_8BiZKnABT7DuhH3",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 35.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 51.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 13.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 0.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_2vJx5DxLUPnx5wR",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 3.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 8.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 80.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 9.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_37UO9jJOpTcmB7m",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 4.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 16.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 50.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_6qecwHuUYkXs2A6",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 70.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 0.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_2nOAd3wbxNTACTQ",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 45.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 5.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_8hNZ09xSlJPEgw1",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 20.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_7dEQv2rhxU8shsC",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 90.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 5.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 5.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_7zpxuEGiCHfGCxX",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 15.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 5.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_66kI1ea42sxnljY",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 32.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 50.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 5.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 3.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_1nZbaPHq7wbclOh",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 70.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 0.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_1iEXAtRlpLehlol",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 5.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 50.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 25.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_7uNXATJ9ew8CgB4",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 70.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 10.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_8c8C4kfUEIXBUvD",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 34.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 15.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 1.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_2oGevzRfdqXimn0",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 15.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 5.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_2jH81NSpJcaRgEE",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 40.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 25.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 5.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_8TfYoeu94ZUiQAV",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 5.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 50.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 5.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_5z7jOZXefayJCGP",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 5.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 60.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 5.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 0.0
+                                    }
+                        ]
+            }
+        ];
+
+        // Calculate percentile
+        function calculatePercentile(sortedArray, percentile) {
+            const index = Math.floor(sortedArray.length * percentile);
+            return sortedArray[Math.min(index, sortedArray.length - 1)];
+        }
+
+        // Compute cumulative probabilities for each expert (P(X >= severity))
+        function computeExceedance(expertData) {
+            return expertData.map(expert => {
+                const exceedance = [];
+                let cumulative = 0;
+
+                // Work backwards from sev 5 to sev 1 for cumulative probability
+                for (let sev = 5; sev >= 1; sev--) {
+                    const probAtSev = expert.data.find(d => d.sev === sev)?.prob || 0;
+                    cumulative += probAtSev;
+                    exceedance.push({ sev: sev, exceedanceProb: cumulative });
+                }
+
+                return { id: expert.id, exceedance: exceedance.reverse() };
+            });
+        }
+
+        // Compute uncertainty bands for exceedance
+        function computeUncertaintyBands(exceedanceData) {
+            const severityLevels = [1, 2, 3, 4, 5];
+
+            return severityLevels.map(sev => {
+                const probs = exceedanceData.map(expert =>
+                    expert.exceedance.find(e => e.sev === sev).exceedanceProb
+                );
+
+                const sorted = [...probs].sort((a, b) => a - b);
+
+                return {
+                    median: calculatePercentile(sorted, 0.5),
+                    p25: calculatePercentile(sorted, 0.25),
+                    p75: calculatePercentile(sorted, 0.75),
+                    p5: calculatePercentile(sorted, 0.05),
+                    p95: calculatePercentile(sorted, 0.95)
+                };
+            });
+        }
+
+        // Compute exact probability bands
+        function computeExactProbabilityBands(expertData) {
+            const severityLevels = [1, 2, 3, 4, 5];
+
+            return severityLevels.map(sev => {
+                const probs = expertData.map(expert => {
+                    const entry = expert.data.find(d => d.sev === sev);
+                    return entry ? entry.prob : 0;
+                });
+
+                const sorted = [...probs].sort((a, b) => a - b);
+
+                // Calculate mean
+                const mean = probs.reduce((sum, val) => sum + val, 0) / probs.length;
+
+                return {
+                    median: mean,
+                    p25: calculatePercentile(sorted, 0.25),
+                    p75: calculatePercentile(sorted, 0.75),
+                    p5: calculatePercentile(sorted, 0.05),
+                    p95: calculatePercentile(sorted, 0.95)
+                };
+            });
+        }
+
+        // Process data for both modes
+        const exceedanceData = computeExceedance(expertData);
+        const exceedanceChartData = computeUncertaintyBands(exceedanceData);
+        const exactChartData = computeExactProbabilityBands(expertData);
+
+        // Start with exact mode
+        let currentMode = 'exact';
+        let chartData = exactChartData;
+
+        let medianValues = chartData.map(d => d.median);
+        let p25Values = chartData.map(d => d.p25);
+        let p75Values = chartData.map(d => d.p75);
+        let p5Values = chartData.map(d => d.p5);
+        let p95Values = chartData.map(d => d.p95);
+
+        // Create datasets for individual experts - exact mode (initially hidden)
+        const individualExpertExactDatasets = expertData.map((expert, idx) => ({
+            label: `Expert ${idx + 1}`,
+            data: expert.data.map(d => d.prob),
+            borderColor: 'rgba(52, 152, 219, 0.3)',
+            backgroundColor: 'transparent',
+            borderWidth: 2,
+            tension: 0.4,
+            pointRadius: 0,
+            order: -1,
+            hidden: true
+        }));
+
+        // Create datasets for individual experts - exceedance mode (initially hidden)
+        const individualExpertExceedanceDatasets = exceedanceData.map((expert, idx) => ({
+            label: `Expert ${idx + 1}`,
+            data: expert.exceedance.map(e => e.exceedanceProb),
+            borderColor: 'rgba(52, 152, 219, 0.3)',
+            backgroundColor: 'transparent',
+            borderWidth: 2,
+            tension: 0.4,
+            pointRadius: 0,
+            order: -1,
+            hidden: true
+        }));
+
+        // Colors for each severity level
+        const severityColors = ['#28a745', '#6c757d', '#ffc107', '#fd7e14', '#dc3545'];
+
+        // Create chart with custom plugin for colored squares
+        const ctx = document.getElementById('severityChart').getContext('2d');
+
+        // Track hover state
+        let hoveredExpertIndex = null;
+
+        // Generate deterministic jitter for each expert
+        const expertJitter = expertData.map((_, idx) => {
+            // Use expert index as seed for deterministic random
+            const seed = idx * 12345;
+            return ((seed % 1000) / 1000 - 0.5) * 0.6;
+        });
+
+        // Plugin to display values in white boxes, draw confidence intervals, and individual dots
+        const medianValuesPlugin = {
+            id: 'medianValues',
+            afterDatasetsDraw: (chart) => {
+                const ctx = chart.ctx;
+                const meta = chart.getDatasetMeta(0); // Mean dataset is now at index 0
+                const yScale = chart.scales.y;
+
+                ctx.save();
+                ctx.font = 'bold 12px Figtree, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+
+                meta.data.forEach((bar, index) => {
+                    const value = chart.data.datasets[0].data[index];
+                    const p25 = p25Values[index];
+                    const p75 = p75Values[index];
+                    const p5 = p5Values[index];
+                    const p95 = p95Values[index];
+
+                    const xPos = bar.x;
+                    const barWidth = bar.width;
+
+                    // Draw individual expert estimates as dots (only if enabled)
+                    // Draw non-hovered dots first, then hovered dots on top
+                    if (showIndividualDots) {
+                        // Determine which data to use based on mode
+                        const dataSource = currentMode === 'exact' ? expertData : exceedanceData;
+
+                        // First pass: draw all non-hovered dots
+                        dataSource.forEach((expert, expertIdx) => {
+                            if (hoveredExpertIndex === expertIdx) return; // Skip hovered expert
+
+                            let expertValue;
+                            if (currentMode === 'exact') {
+                                expertValue = expert.data[index].prob;
+                            } else {
+                                expertValue = expert.exceedance[index].exceedanceProb;
+                            }
+
+                            const yPos = yScale.getPixelForValue(expertValue);
+
+                            // Use deterministic jitter
+                            const jitter = expertJitter[expertIdx] * barWidth;
+                            const dotX = xPos + jitter;
+
+                            // Draw dot - light blue with dark blue border
+                            ctx.fillStyle = 'rgba(135, 206, 235, 0.6)';
+                            ctx.beginPath();
+                            ctx.arc(dotX, yPos, 3, 0, 2 * Math.PI);
+                            ctx.fill();
+
+                            ctx.strokeStyle = 'rgba(30, 58, 138, 0.7)';
+                            ctx.lineWidth = 1;
+                            ctx.stroke();
+                        });
+
+                        // Second pass: draw hovered expert dots on top
+                        if (hoveredExpertIndex !== null) {
+                            const expert = dataSource[hoveredExpertIndex];
+                            if (expert) {
+                                let expertValue;
+                                if (currentMode === 'exact') {
+                                    expertValue = expert.data[index].prob;
+                                } else {
+                                    expertValue = expert.exceedance[index].exceedanceProb;
+                                }
+
+                                const yPos = yScale.getPixelForValue(expertValue);
+
+                                // Use deterministic jitter
+                                const jitter = expertJitter[hoveredExpertIndex] * barWidth;
+                                const dotX = xPos + jitter;
+
+                                // Draw larger dot with severity color and black border
+                                ctx.fillStyle = severityColors[index];
+                                ctx.beginPath();
+                                ctx.arc(dotX, yPos, 6, 0, 2 * Math.PI);
+                                ctx.fill();
+
+                                ctx.strokeStyle = '#000';
+                                ctx.lineWidth = 2;
+                                ctx.stroke();
+                            }
+                        }
+                    }
+
+                    // Draw 90% interval line
+                    ctx.strokeStyle = 'rgba(0, 0, 0, 0.4)';
+                    ctx.lineWidth = 1.5;
+                    const y5 = yScale.getPixelForValue(p5);
+                    const y95 = yScale.getPixelForValue(p95);
+
+                    ctx.beginPath();
+                    ctx.moveTo(xPos, y5);
+                    ctx.lineTo(xPos, y95);
+                    ctx.stroke();
+
+                    // Draw caps for 90%
+                    const capWidth = 6;
+                    ctx.beginPath();
+                    ctx.moveTo(xPos - capWidth, y5);
+                    ctx.lineTo(xPos + capWidth, y5);
+                    ctx.moveTo(xPos - capWidth, y95);
+                    ctx.lineTo(xPos + capWidth, y95);
+                    ctx.stroke();
+
+                    // Draw 50% interval line (thicker)
+                    ctx.strokeStyle = 'rgba(0, 0, 0, 0.7)';
+                    ctx.lineWidth = 2.5;
+                    const y25 = yScale.getPixelForValue(p25);
+                    const y75 = yScale.getPixelForValue(p75);
+
+                    ctx.beginPath();
+                    ctx.moveTo(xPos, y25);
+                    ctx.lineTo(xPos, y75);
+                    ctx.stroke();
+
+                    // Draw caps for 50%
+                    ctx.lineWidth = 1.5;
+                    ctx.beginPath();
+                    ctx.moveTo(xPos - capWidth, y25);
+                    ctx.lineTo(xPos + capWidth, y25);
+                    ctx.moveTo(xPos - capWidth, y75);
+                    ctx.lineTo(xPos + capWidth, y75);
+                    ctx.stroke();
+
+                    // Draw white box with black border at the mean value position
+                    const yValue = yScale.getPixelForValue(value);
+                    const text = Math.round(value) + '%';
+                    const textWidth = ctx.measureText(text).width;
+                    const boxPadding = 4;
+                    const boxWidth = textWidth + (boxPadding * 2);
+                    const boxHeight = 18;
+
+                    // Draw white background
+                    ctx.fillStyle = '#fff';
+                    ctx.fillRect(xPos - boxWidth/2, yValue - boxHeight/2, boxWidth, boxHeight);
+
+                    // Draw black border
+                    ctx.strokeStyle = '#000';
+                    ctx.lineWidth = 1;
+                    ctx.strokeRect(xPos - boxWidth/2, yValue - boxHeight/2, boxWidth, boxHeight);
+
+                    // Display value
+                    ctx.fillStyle = '#000';
+                    ctx.fillText(text, xPos, yValue);
+                });
+
+                ctx.restore();
+            }
+        };
+
+        // Add mouse move handler for hover interaction
+        const chartCanvas = document.getElementById('severityChart');
+        const tooltip = document.getElementById('expertTooltip');
+
+        chartCanvas.addEventListener('mousemove', (event) => {
+            const rect = chartCanvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+
+            const yScale = chart.scales.y;
+            let foundExpert = null;
+            let minDistance = Infinity;
+
+            // Only check for hover if individual dots are visible
+            if (showIndividualDots) {
+                // Determine which data to use based on mode
+                const dataSource = currentMode === 'exact' ? expertData : exceedanceData;
+
+                // Check if hovering over any expert dot
+                chart.getDatasetMeta(0).data.forEach((bar, index) => {
+                    const xPos = bar.x;
+                    const barWidth = bar.width;
+
+                    dataSource.forEach((expert, expertIdx) => {
+                        let expertValue;
+                        if (currentMode === 'exact') {
+                            expertValue = expert.data[index].prob;
+                        } else {
+                            expertValue = expert.exceedance[index].exceedanceProb;
+                        }
+
+                        const yPos = yScale.getPixelForValue(expertValue);
+
+                        // Use same deterministic jitter
+                        const jitter = expertJitter[expertIdx] * barWidth;
+                        const dotX = xPos + jitter;
+
+                        const distance = Math.sqrt((x - dotX) ** 2 + (y - yPos) ** 2);
+                        if (distance < 10 && distance < minDistance) {
+                            foundExpert = expertIdx;
+                            minDistance = distance;
+                        }
+                    });
+                });
+            }
+
+            if (foundExpert !== hoveredExpertIndex) {
+                hoveredExpertIndex = foundExpert;
+                chart.update('none');
+
+                // Show tooltip with expert estimates
+                if (hoveredExpertIndex !== null) {
+                    let tooltipHTML;
+
+                    if (currentMode === 'exact') {
+                        const expert = expertData[hoveredExpertIndex];
+                        tooltipHTML = `
+                            <div class="expert-tooltip-title">Expert ${hoveredExpertIndex + 1}</div>
+                            ${expert.data.map((d, i) => {
+                                const color = severityColors[i];
+                                return `<div class="expert-tooltip-item" style="color: ${color};">
+                                    <strong>${chart.data.labels[i]}:</strong> ${d.prob}%
+                                </div>`;
+                            }).join('')}
+                        `;
+                    } else {
+                        const expert = exceedanceData[hoveredExpertIndex];
+                        tooltipHTML = `
+                            <div class="expert-tooltip-title">Expert ${hoveredExpertIndex + 1}</div>
+                            ${expert.exceedance.map((d, i) => {
+                                const color = severityColors[i];
+                                return `<div class="expert-tooltip-item" style="color: ${color};">
+                                    <strong>${chart.data.labels[i]}:</strong> ${d.exceedanceProb.toFixed(1)}%
+                                </div>`;
+                            }).join('')}
+                        `;
+                    }
+
+                    tooltip.innerHTML = tooltipHTML;
+                    tooltip.classList.add('visible');
+
+                    // Position tooltip near mouse
+                    tooltip.style.left = (event.clientX - rect.left + 15) + 'px';
+                    tooltip.style.top = (event.clientY - rect.top + 15) + 'px';
+                } else {
+                    tooltip.classList.remove('visible');
+                }
+            } else if (hoveredExpertIndex !== null) {
+                // Update tooltip position
+                tooltip.style.left = (event.clientX - rect.left + 15) + 'px';
+                tooltip.style.top = (event.clientY - rect.top + 15) + 'px';
+            }
+        });
+
+        chartCanvas.addEventListener('mouseleave', () => {
+            hoveredExpertIndex = null;
+            tooltip.classList.remove('visible');
+            chart.update('none');
+        });
+
+        // Fix blurry canvas on high-DPI displays
+        const dpr = window.devicePixelRatio || 1;
+        const canvas = document.getElementById('severityChart');
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        ctx.scale(dpr, dpr);
+
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Negligible', 'Minor', 'Substantial', 'Severe', 'Catastrophic'],
+                datasets: [
+                    {
+                        label: 'Mean',
+                        data: medianValues,
+                        type: 'bar',
+                        backgroundColor: severityColors,
+                        borderColor: severityColors,
+                        borderWidth: 1,
+                        order: 0
+                    },
+                    ...individualExpertExactDatasets
+                ]
+            },
+            plugins: [medianValuesPlugin],
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'nearest',
+                    intersect: true
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    title: {
+                        display: false
+                    },
+                    tooltip: {
+                        bodyFont: {
+                            family: 'Figtree, sans-serif'
+                        },
+                        titleFont: {
+                            family: 'Figtree, sans-serif'
+                        },
+                        callbacks: {
+                            label: function(context) {
+                                const idx = context.dataIndex;
+                                if (context.datasetIndex === 0) {
+                                    return [
+                                        `Mean: ${chart.data.datasets[0].data[idx].toFixed(1)}%`,
+                                        `50% interval: ${p25Values[idx].toFixed(1)}% - ${p75Values[idx].toFixed(1)}%`,
+                                        `90% interval: ${p5Values[idx].toFixed(1)}% - ${p95Values[idx].toFixed(1)}%`
+                                    ];
+                                }
+                                return null;
+                            },
+                            filter: function(tooltipItem) {
+                                return tooltipItem.datasetIndex === 0;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        min: 0,
+                        max: 100,
+                        title: {
+                            display: true,
+                            text: 'Probability (%)',
+                            font: {
+                                family: 'Figtree, sans-serif',
+                                size: 16,
+                                weight: 'bold'
+                            },
+                            color: '#000'
+                        },
+                        ticks: {
+                            font: {
+                                family: 'Figtree, sans-serif',
+                                size: 14
+                            },
+                            color: '#000'
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.25)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: false
+                        },
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            display: false
+                        }
+                    }
+                },
+                layout: {
+                    padding: {
+                        left: 10,
+                        right: 35,
+                        bottom: 25
+                    }
+                }
+            }
+        });
+
+        // UI Controls
+        let expertsVisible = false;
+        let showIndividualDots = false;
+        const toggleButton = document.getElementById('toggleExperts');
+        const modeExactBtn = document.getElementById('modeExact');
+        const modeExceedanceBtn = document.getElementById('modeExceedance');
+
+        // Function to update chart mode
+        function updateChartMode(mode) {
+            currentMode = mode;
+
+            if (mode === 'exact') {
+                // Update chart data to exact probabilities
+                chartData = exactChartData;
+                medianValues = chartData.map(d => d.median);
+                p25Values = chartData.map(d => d.p25);
+                p75Values = chartData.map(d => d.p75);
+                p5Values = chartData.map(d => d.p5);
+                p95Values = chartData.map(d => d.p95);
+
+                chart.data.datasets[0].data = medianValues;
+
+                modeExactBtn.classList.add('active');
+                modeExceedanceBtn.classList.remove('active');
+            } else {
+                // Update chart data to exceedance
+                chartData = exceedanceChartData;
+                medianValues = chartData.map(d => d.median);
+                p25Values = chartData.map(d => d.p25);
+                p75Values = chartData.map(d => d.p75);
+                p5Values = chartData.map(d => d.p5);
+                p95Values = chartData.map(d => d.p95);
+
+                chart.data.datasets[0].data = medianValues;
+
+                modeExactBtn.classList.remove('active');
+                modeExceedanceBtn.classList.add('active');
+            }
+
+            chart.update();
+        }
+
+        // Mode switch handlers
+        modeExactBtn.addEventListener('click', () => updateChartMode('exact'));
+        modeExceedanceBtn.addEventListener('click', () => updateChartMode('exceedance'));
+
+        // Toggle individual expert dots
+        toggleButton.addEventListener('click', () => {
+            showIndividualDots = !showIndividualDots;
+
+            // Update button text and style
+            if (showIndividualDots) {
+                toggleButton.textContent = '▼ Hide Individual Expert Estimates';
+                toggleButton.classList.remove('inactive');
+            } else {
+                toggleButton.textContent = '▶ Show Individual Expert Estimates';
+                toggleButton.classList.add('inactive');
+            }
+
+            chart.update();
+        });
+    </script>
+</body>
+</html>
