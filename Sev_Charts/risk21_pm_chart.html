@@ -230,11 +230,11 @@
                 <span>()% = Mean</span>
             </div>
             <div class="legend-item">
-                <div class="legend-line" style="background: rgba(0, 0, 0, 0.4); height: 1.5px;"></div>
+                <div class="legend-line" style="background: rgba(100, 149, 237, 0.7); height: 3px;"></div>
                 <span>90% interval (5th-95th percentile)</span>
             </div>
             <div class="legend-item">
-                <div class="legend-line" style="background: rgba(0, 0, 0, 0.7); height: 2.5px;"></div>
+                <div class="legend-line" style="background: rgba(25, 25, 112, 0.85); height: 4px;"></div>
                 <span>50% interval (25th-75th percentile)</span>
             </div>
         </div>
@@ -2580,8 +2580,11 @@
 
                 const sorted = [...probs].sort((a, b) => a - b);
 
+                // Calculate mean (not median) for cumulative probabilities
+                const mean = probs.reduce((sum, val) => sum + val, 0) / probs.length;
+
                 return {
-                    median: calculatePercentile(sorted, 0.5),
+                    median: mean,
                     p25: calculatePercentile(sorted, 0.25),
                     p75: calculatePercentile(sorted, 0.75),
                     p5: calculatePercentile(sorted, 0.05),
@@ -2664,6 +2667,7 @@
 
         // Track hover state
         let hoveredExpertIndex = null;
+        let hoveredBarIndex = null;
 
         // Generate deterministic jitter for each expert
         const expertJitter = expertData.map((_, idx) => {
@@ -2759,11 +2763,15 @@
                         }
                     }
 
-                    // Draw 90% interval line
-                    ctx.strokeStyle = 'rgba(0, 0, 0, 0.4)';
-                    ctx.lineWidth = 1.5;
+                    // Calculate positions for intervals
                     const y5 = yScale.getPixelForValue(p5);
                     const y95 = yScale.getPixelForValue(p95);
+                    const y25 = yScale.getPixelForValue(p25);
+                    const y75 = yScale.getPixelForValue(p75);
+
+                    // Draw 90% interval line (thicker) - light blue
+                    ctx.strokeStyle = 'rgba(100, 149, 237, 0.7)'; // cornflower blue
+                    ctx.lineWidth = 3;
 
                     ctx.beginPath();
                     ctx.moveTo(xPos, y5);
@@ -2771,7 +2779,7 @@
                     ctx.stroke();
 
                     // Draw caps for 90%
-                    const capWidth = 6;
+                    const capWidth = 8;
                     ctx.beginPath();
                     ctx.moveTo(xPos - capWidth, y5);
                     ctx.lineTo(xPos + capWidth, y5);
@@ -2779,11 +2787,9 @@
                     ctx.lineTo(xPos + capWidth, y95);
                     ctx.stroke();
 
-                    // Draw 50% interval line (thicker)
-                    ctx.strokeStyle = 'rgba(0, 0, 0, 0.7)';
-                    ctx.lineWidth = 2.5;
-                    const y25 = yScale.getPixelForValue(p25);
-                    const y75 = yScale.getPixelForValue(p75);
+                    // Draw 50% interval line (even thicker) - dark blue
+                    ctx.strokeStyle = 'rgba(25, 25, 112, 0.85)'; // midnight blue
+                    ctx.lineWidth = 4;
 
                     ctx.beginPath();
                     ctx.moveTo(xPos, y25);
@@ -2791,7 +2797,7 @@
                     ctx.stroke();
 
                     // Draw caps for 50%
-                    ctx.lineWidth = 1.5;
+                    ctx.lineWidth = 3;
                     ctx.beginPath();
                     ctx.moveTo(xPos - capWidth, y25);
                     ctx.lineTo(xPos + capWidth, y25);
@@ -2837,6 +2843,14 @@
             const yScale = chart.scales.y;
             let foundExpert = null;
             let minDistance = Infinity;
+
+            // Track which bar is being hovered over
+            const barElements = chart.getElementsAtEventForMode(event, 'index', { intersect: false }, false);
+            if (barElements.length > 0 && barElements[0].datasetIndex === 0) {
+                hoveredBarIndex = barElements[0].index;
+            } else {
+                hoveredBarIndex = null;
+            }
 
             // Only check for hover if individual dots are visible
             if (showIndividualDots) {
@@ -2921,6 +2935,7 @@
 
         chartCanvas.addEventListener('mouseleave', () => {
             hoveredExpertIndex = null;
+            hoveredBarIndex = null;
             tooltip.classList.remove('visible');
             chart.update('none');
         });
