@@ -15,6 +15,11 @@
             margin: 0 auto;
             padding: 20px;
             background: white;
+        
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
         .container {
             background: white;
@@ -192,7 +197,11 @@
         .expert-tooltip-item {
             margin: 3px 0;
         }
-    </style>
+            canvas {
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+        }
+</style>
 </head>
 <body>
     <div class="container">
