@@ -14,12 +14,7 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
-            background: white;
-        
-            image-rendering: -webkit-optimize-contrast;
-            image-rendering: crisp-edges;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+            background: #f5f5f5;
         }
         .container {
             background: white;
@@ -32,8 +27,8 @@
         .banner {
             background: #000;
             color: white;
-            padding: 8px 15px;
-            font-size: 14px;
+            padding: 10px 20px;
+            font-size: 18px;
             font-weight: 600;
             text-align: center;
         }
@@ -52,25 +47,25 @@
         }
         .chart-container {
             position: relative;
-            height: 280px;
+            height: 500px;
             margin-top: 0px;
         }
-                .legend {
-            margin-top: 15px;
-            padding: 8px 10px;
+        .legend {
+            margin-top: 20px;
+            padding: 10px;
             background: #f9f9f9;
             border-radius: 4px;
             display: flex;
             justify-content: center;
-            gap: 15px;
+            gap: 20px;
             flex-wrap: wrap;
         }
-                .legend-item {
+        .legend-item {
             display: flex;
             align-items: center;
-            gap: 6px;
-            font-size: 12px;
-            font-weight: 500;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 600;
         }
         .legend-box {
             width: 30px;
@@ -84,14 +79,13 @@
         }
         .controls {
             margin-bottom: 10px;
-            padding: 8px 10px;
+            padding: 10px;
             background: #f9f9f9;
             border-radius: 4px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            flex-wrap: nowrap;
-            justify-content: space-between;
+            gap: 15px;
+            flex-wrap: wrap;
         }
         .control-group {
             display: flex;
@@ -102,10 +96,10 @@
             background: transparent;
             color: #a32035;
             border: none;
-            padding: 8px 0px;
+            padding: 10px 0px;
             border-radius: 0px;
             font-family: 'Figtree', sans-serif;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
@@ -137,9 +131,9 @@
             background: white;
             color: #a32035;
             border: none;
-            padding: 8px 12px;
+            padding: 10px 20px;
             font-family: 'Figtree', sans-serif;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
@@ -164,17 +158,17 @@
             position: relative;
             width: calc(100% - 40px);
         }
-                                .severity-label {
+        .severity-label {
             font-size: 17px;
             font-weight: bold;
             white-space: nowrap;
             position: absolute;
         }
-        
-        
-        
-        
-        
+        .severity-label:nth-child(1) { left: 8%; transform: translateX(0%); }
+        .severity-label:nth-child(2) { left: 32%; transform: translateX(-50%); }
+        .severity-label:nth-child(3) { left: 52%; transform: translateX(-50%); }
+        .severity-label:nth-child(4) { left: 70%; transform: translateX(-50%); }
+        .severity-label:nth-child(5) { left: 95%; transform: translateX(-100%); }
         .expert-tooltip {
             position: absolute;
             background: white;
@@ -197,28 +191,12 @@
         .expert-tooltip-item {
             margin: 3px 0;
         }
-            canvas {
-            image-rendering: -webkit-optimize-contrast;
-            image-rendering: crisp-edges;
-        }
-
-                
-        
-        
-        
-        
-                .severity-label:nth-child(1) { left: 8%; transform: translateX(0%); }
-        .severity-label:nth-child(2) { left: 32%; transform: translateX(-50%); }
-        .severity-label:nth-child(3) { left: 52%; transform: translateX(-50%); }
-        .severity-label:nth-child(4) { left: 70%; transform: translateX(-50%); }
-        .severity-label:nth-child(5) { left: 95%; transform: translateX(-100%); }
-        
-</style>
+    </style>
 </head>
 <body>
     <div class="container">
         <div class="banner">
-            2.2 AI system security vulnerabilities and attacks / Business as usual
+            1.1 Unfair discrimination and misrepresentation / Business as usual
         </div>
 
         <div class="chart-content">
@@ -249,8 +227,7 @@
 
         <div class="legend">
             <div class="legend-item">
-                <div style="display: inline-block; background: white; border: 1px solid #000; padding: 2px 6px; border-radius: 2px; font-weight: 600;">_%</div>
-                <span>is mean likelihood</span>
+                <span>()% is mean likelihood</span>
             </div>
             <div class="legend-item">
                 <div class="legend-line" style="background: rgba(100, 149, 237, 0.7); height: 3px;"></div>
@@ -265,7 +242,7 @@
     </div>
 
     <script>
-        // Data extracted from risk_number = 10, scenario = BAU
+        // Data extracted from risk_number = 1, scenario = BAU
         const expertData = [
                         {
                                     "id": "R_23VluVdsmx1nk6e",
@@ -2536,10 +2513,9 @@
         const severityColors = ['#28a745', '#6c757d', '#ffc107', '#fd7e14', '#dc3545'];
 
         // Create chart with custom plugin for colored squares
-        const ctx = document.getElementById(\'severityChart\').getContext(\'2d\');
-        
+        const ctx = document.getElementById('severityChart').getContext('2d');
 
-        
+        // Track hover state
         let hoveredExpertIndex = null;
         let hoveredBarIndex = null;
 
@@ -2705,6 +2681,114 @@
             }
         };
 
+        // Add mouse move handler for hover interaction
+        const chartCanvas = document.getElementById('severityChart');
+        const tooltip = document.getElementById('expertTooltip');
+
+        chartCanvas.addEventListener('mousemove', (event) => {
+            const rect = chartCanvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+
+            const yScale = chart.scales.y;
+            let foundExpert = null;
+            let minDistance = Infinity;
+
+            // Track which bar is being hovered over
+            const barElements = chart.getElementsAtEventForMode(event, 'index', { intersect: false }, false);
+            if (barElements.length > 0 && barElements[0].datasetIndex === 0) {
+                hoveredBarIndex = barElements[0].index;
+            } else {
+                hoveredBarIndex = null;
+            }
+
+            // Only check for hover if individual dots are visible
+            if (showIndividualDots) {
+                // Determine which data to use based on mode
+                const dataSource = currentMode === 'exact' ? expertData : exceedanceData;
+
+                // Check if hovering over any expert dot
+                chart.getDatasetMeta(0).data.forEach((bar, index) => {
+                    const xPos = bar.x;
+                    const barWidth = bar.width;
+
+                    dataSource.forEach((expert, expertIdx) => {
+                        let expertValue;
+                        if (currentMode === 'exact') {
+                            expertValue = expert.data[index].prob;
+                        } else {
+                            expertValue = expert.exceedance[index].exceedanceProb;
+                        }
+
+                        const yPos = yScale.getPixelForValue(expertValue);
+
+                        // Use same deterministic jitter
+                        const jitter = expertJitter[expertIdx] * barWidth;
+                        const dotX = xPos + jitter;
+
+                        const distance = Math.sqrt((x - dotX) ** 2 + (y - yPos) ** 2);
+                        if (distance < 10 && distance < minDistance) {
+                            foundExpert = expertIdx;
+                            minDistance = distance;
+                        }
+                    });
+                });
+            }
+
+            if (foundExpert !== hoveredExpertIndex) {
+                hoveredExpertIndex = foundExpert;
+                chart.update('none');
+
+                // Show tooltip with expert estimates
+                if (hoveredExpertIndex !== null) {
+                    let tooltipHTML;
+
+                    if (currentMode === 'exact') {
+                        const expert = expertData[hoveredExpertIndex];
+                        tooltipHTML = `
+                            <div class="expert-tooltip-title">Expert ${hoveredExpertIndex + 1}</div>
+                            ${expert.data.map((d, i) => {
+                                const color = severityColors[i];
+                                return `<div class="expert-tooltip-item" style="color: ${color};">
+                                    <strong>${chart.data.labels[i]} harm:</strong> ${Math.round(d.prob)}%
+                                </div>`;
+                            }).join('')}
+                        `;
+                    } else {
+                        const expert = exceedanceData[hoveredExpertIndex];
+                        tooltipHTML = `
+                            <div class="expert-tooltip-title">Expert ${hoveredExpertIndex + 1}</div>
+                            ${expert.exceedance.map((d, i) => {
+                                const color = severityColors[i];
+                                return `<div class="expert-tooltip-item" style="color: ${color};">
+                                    <strong>${chart.data.labels[i]} harm:</strong> ${Math.round(d.exceedanceProb)}%
+                                </div>`;
+                            }).join('')}
+                        `;
+                    }
+
+                    tooltip.innerHTML = tooltipHTML;
+                    tooltip.classList.add('visible');
+
+                    // Position tooltip near mouse
+                    tooltip.style.left = (event.clientX - rect.left + 15) + 'px';
+                    tooltip.style.top = (event.clientY - rect.top + 15) + 'px';
+                } else {
+                    tooltip.classList.remove('visible');
+                }
+            } else if (hoveredExpertIndex !== null) {
+                // Update tooltip position
+                tooltip.style.left = (event.clientX - rect.left + 15) + 'px';
+                tooltip.style.top = (event.clientY - rect.top + 15) + 'px';
+            }
+        });
+
+        chartCanvas.addEventListener('mouseleave', () => {
+            hoveredExpertIndex = null;
+            hoveredBarIndex = null;
+            tooltip.classList.remove('visible');
+            chart.update('none');
+        });
 
         // Fix blurry canvas on high-DPI displays
         const dpr = window.devicePixelRatio || 1;
@@ -2833,115 +2917,6 @@
                     }
                 }
             }
-        });
-
-        // Add mouse move handler for hover interaction
-        const chartCanvas = document.getElementById('severityChart');
-        const tooltip = document.getElementById('expertTooltip');
-
-        chartCanvas.addEventListener('mousemove', (event) => {
-            const rect = chartCanvas.getBoundingClientRect();
-            const x = event.clientX - rect.left;
-            const y = event.clientY - rect.top;
-
-            const yScale = chart.scales.y;
-            let foundExpert = null;
-            let minDistance = Infinity;
-
-            // Track which bar is being hovered over
-            const barElements = chart.getElementsAtEventForMode(event, 'index', { intersect: false }, false);
-            if (barElements.length > 0 && barElements[0].datasetIndex === 0) {
-                hoveredBarIndex = barElements[0].index;
-            } else {
-                hoveredBarIndex = null;
-            }
-
-            // Only check for hover if individual dots are visible
-            if (showIndividualDots) {
-                // Determine which data to use based on mode
-                const dataSource = currentMode === 'exact' ? expertData : exceedanceData;
-
-                // Check if hovering over any expert dot
-                chart.getDatasetMeta(0).data.forEach((bar, index) => {
-                    const xPos = bar.x;
-                    const barWidth = bar.width;
-
-                    dataSource.forEach((expert, expertIdx) => {
-                        let expertValue;
-                        if (currentMode === 'exact') {
-                            expertValue = expert.data[index].prob;
-                        } else {
-                            expertValue = expert.exceedance[index].exceedanceProb;
-                        }
-
-                        const yPos = yScale.getPixelForValue(expertValue);
-
-                        // Use same deterministic jitter
-                        const jitter = expertJitter[expertIdx] * barWidth;
-                        const dotX = xPos + jitter;
-
-                        const distance = Math.sqrt((x - dotX) ** 2 + (y - yPos) ** 2);
-                        if (distance < 10 && distance < minDistance) {
-                            foundExpert = expertIdx;
-                            minDistance = distance;
-                        }
-                    });
-                });
-            }
-
-            if (foundExpert !== hoveredExpertIndex) {
-                hoveredExpertIndex = foundExpert;
-                chart.update('none');
-
-                // Show tooltip with expert estimates
-                if (hoveredExpertIndex !== null) {
-                    let tooltipHTML;
-
-                    if (currentMode === 'exact') {
-                        const expert = expertData[hoveredExpertIndex];
-                        tooltipHTML = `
-                            <div class="expert-tooltip-title">Expert ${hoveredExpertIndex + 1}</div>
-                            ${expert.data.map((d, i) => {
-                                const color = severityColors[i];
-                                return `<div class="expert-tooltip-item" style="color: ${color};">
-                                    <strong>${chart.data.labels[i]} harm:</strong> ${Math.round(d.prob)}%
-                                </div>`;
-                            }).join('')}
-                        `;
-                    } else {
-                        const expert = exceedanceData[hoveredExpertIndex];
-                        tooltipHTML = `
-                            <div class="expert-tooltip-title">Expert ${hoveredExpertIndex + 1}</div>
-                            ${expert.exceedance.map((d, i) => {
-                                const color = severityColors[i];
-                                return `<div class="expert-tooltip-item" style="color: ${color};">
-                                    <strong>${chart.data.labels[i]} harm:</strong> ${Math.round(d.exceedanceProb)}%
-                                </div>`;
-                            }).join('')}
-                        `;
-                    }
-
-                    tooltip.innerHTML = tooltipHTML;
-                    tooltip.classList.add('visible');
-
-                    // Position tooltip near mouse
-                    tooltip.style.left = (event.clientX - rect.left + 15) + 'px';
-                    tooltip.style.top = (event.clientY - rect.top + 15) + 'px';
-                } else {
-                    tooltip.classList.remove('visible');
-                }
-            } else if (hoveredExpertIndex !== null) {
-                // Update tooltip position
-                tooltip.style.left = (event.clientX - rect.left + 15) + 'px';
-                tooltip.style.top = (event.clientY - rect.top + 15) + 'px';
-            }
-        });
-
-        chartCanvas.addEventListener('mouseleave', () => {
-            hoveredExpertIndex = null;
-            hoveredBarIndex = null;
-            tooltip.classList.remove('visible');
-            chart.update('none');
         });
 
         // UI Controls
