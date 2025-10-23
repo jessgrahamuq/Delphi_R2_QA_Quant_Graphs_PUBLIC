@@ -2537,10 +2537,15 @@
 
         // Create chart with custom plugin for colored squares
         const canvas = document.getElementById('severityChart');
+        // Fix blurry canvas on high-DPI displays
+        const ctx = document.getElementById('severityChart').getContext('2d');
+        const dpr = window.devicePixelRatio || 1;
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        ctx.scale(dpr, dpr);
 
-        
-
-        // Track hover state
+        
         let hoveredExpertIndex = null;
         let hoveredBarIndex = null;
 
