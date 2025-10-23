@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Risk 22: 7.4 Lack of transparency or interpretability - Required Actors Responsibility</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Figtree', Arial, sans-serif;
+            margin: 0;
+            padding: 5px;
+            background-color: transparent;
+        }
+
+        .matrix-container {
+            background: transparent;
+            border: none;
+            border-radius: 0;
+            padding: 0;
+            max-width: 750px;
+            margin: 0;
+        }
+
+        .matrix-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 5px;
+            table-layout: fixed;
+        }
+
+        .matrix-table th {
+            background-color: transparent;
+            padding: 6px 4px;
+            text-align: center;
+            font-weight: bold;
+            border: none;
+            font-size: 14px;
+        }
+
+        .matrix-table th:last-child {
+            border-left: 2px dashed #666;
+        }
+
+        .actor-label {
+            background-color: transparent;
+            padding: 8px 6px;
+            font-weight: bold;
+            text-align: left;
+            border: none;
+            border-top: 1px solid #666;
+            width: 140px;
+            font-size: 15px;
+            word-wrap: break-word;
+            white-space: normal;
+            line-height: 1.3;
+            hyphens: auto;
+        }
+
+        .response-cell {
+            padding: 5px 4px;
+            text-align: center;
+            border: none;
+            border-top: 1px solid #666;
+            position: relative;
+            min-width: 80px;
+            background-color: transparent;
+            vertical-align: bottom;
+        }
+
+        .bar-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .distribution-bar {
+            width: 50px;
+            border-radius: 3px 3px 0 0;
+            transition: height 0.4s ease;
+            position: relative;
+            margin-bottom: 4px;
+            border: 1px solid #666;
+        }
+
+        .bar-label {
+            text-align: center;
+            font-size: 11px;
+            font-weight: bold;
+            color: #333;
+            line-height: 1.1;
+            padding: 2px 4px;
+        }
+
+        .legend {
+            margin-top: 15px;
+            padding: 0;
+            background-color: transparent;
+            border-radius: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-item:last-child {
+            font-size: 11px;
+            color: #777;
+            text-align: right; flex: 1;
+            flex-shrink: 1; min-width: 0; word-wrap: break-word; white-space: normal;
+        }
+
+        .legend-arrow {
+            font-size: 14px;
+            color: #ea4335;
+        }
+    </style>
+</head>
+<body>
+            <div style="display: inline-block; border: 2px solid #000000; border-radius: 4px; padding: 5px; margin: 5px 0;">
+        <div style="background-color: #000000; color: white; padding: 6px 8px; margin: -5px -5px 5px -5px; border-radius: 2px 2px 0 0; font-weight: bold; font-size: 14px; text-align: center; line-height: 1.2;">
+            Summary of Round 2 Expert Judgements
+        </div>
+        <div class="matrix-container">
+        <div id="mainContent" style="display: block;">
+            <table class="matrix-table">
+                <thead>
+                    <tr>
+                        <th style="width: 140px;"></th>
+                        <th>Not at all responsible</th>
+                        <th>Minimally responsible</th>
+                        <th>Moderately responsible</th>
+                        <th>Highly responsible</th>
+                        <th>Primarily responsible</th>
+                        <th style="color: #d7191c;">Don't Know/Unsure</th>
+                    </tr>
+                </thead>
+                <tbody>
+<tr data-actor="ai_dev_gen">
+                        <td class="actor-label" style="background-color: rgba(0, 0, 0, 0.7); color: white;">
+                            AI Developer (General-purpose AI)<br><span style="background-color: white; color: #333; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-weight: bold; white-space: nowrap;">✓ CONSENSUS REACHED</span>
+                        </td>
+                        <td class="response-cell" style="background-color: rgba(0, 0, 0, 0.7);">
+                            <div class="bar-wrapper" style="height: 80px;">
+                                <div class="distribution-bar" style="height: 0px; background-color: #2c7bb6; position: relative;">
+                                    
+                                </div>
+                                <div class="bar-label" style="color: white;">0% (0)</div>
+                            </div>
+                        </td>
+                        <td class="response-cell" style="background-color: rgba(0, 0, 0, 0.7);">
+                            <div class="bar-wrapper" style="height: 80px;">
+                                <div class="distribution-bar" style="height: 0px; background-color: #abd9e9; position: relative;">
+                                    
+                                </div>
+                                <div class="bar-label" style="color: white;">0% (0)</div>
+                            </div>
+                        </td>
+                        <td class="response-cell" style="background-color: rgba(0, 0, 0, 0.7);">
+                            <div class="bar-wrapper" style="height: 80px;">
+                                <div class="distribution-bar" style="height: 5px; background-color: #ffffbf; position: relative;">
+                                    
+                                </div>
+                                <div class="bar-label" style="color: white;">4% (5)</div>
+                            </div>
+                        </td>
+                        <td class="response-cell" style="background-color: rgba(0, 0, 0, 0.7);">
+                            <div class="bar-wrapper" style="height: 80px;">
+                                <div class="distribution-bar" style="height: 20.210526315789473px; background-color: #fdae61; position: relative;">
+                                    
+                                </div>
+                                <div class="bar-label" style="color: white;">19% (24)</div>
+                            </div>
+                        </td>
+                        <td class="response-cell" style="background-color: rgba(0, 0, 0, 0.7);">
+                            <div class="bar-wrapper" style="height: 80px;">
+                                <div class="distribution-bar" style="height: 80.0px; background-color: #d7191c; position: relative;">
+                                    <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); font-size: 14px; color: #ea4335; z-index: 10;">▼</div>
+                                </div>
+                                <div class="bar-label" style="color: white;">77% (95)</div>
+                            </div>
+                        </td>
+                        <td class="response-cell" style="background-color: rgba(0, 0, 0, 0.7); border-left: 2px dashed #666;">
+                            <div class="bar-wrapper" style="height: 80px;">
+                                <div class="distribution-bar" style="height: 0px; background-color: #cccccc; position: relative;">
+
+                                </div>
+                                <div class="bar-label" style="color: white;">0% (0)</div>
+                            </div>
+                        </td>
+                    </tr>
+<tr data-actor="ai_deployer">
+                        <td class="actor-label" style="background-color: white; color: inherit;">
+                            AI Deployer
+                        </td>
+                        <td class="response-cell" style="background-color: white;">
+                            <div class="bar-wrapper" style="height: 80px;">
+                                <div class="distribution-bar" style="height: 5px; background-color: #2c7bb6; position: relative;">
+                                    
+                                </div>
+                                <div class="bar-label" style="">1% (1)</div>
+                            </div>
+                        </td>
+                        <td class="response-cell" style="background-color: white;">
+                            <div class="bar-wrapper" style="height: 80px;">
+                                <div class="distribution-bar" style="height: 5px; background-color: #abd9e9; position: relative;">
+                                    
+                                </div>
+                                <div class="bar-label" style="">2% (3)</div>
+                            </div>
+                        </td>
+                        <td class="response-cell" style="background-color: white;">
+                            <div class="bar-wrapper" style="height: 80px;">
+                                <div class="distribution-bar" style="height: 10.105263157894736px; background-color: #ffffbf; position: relative;">
+                                    
+                                </div>
+                                <div class="bar-label" style="">10% (12)</div>
+                            </div>
+                        </td>
+                        <td class="response-cell" style="background-color: white;">
+                            <div class="bar-wrapper" style="height: 80px;">
+                                <div class="distribution-bar" style="height: 56.421052631578945px; background-color: #fdae61; position: relative;">
+                                    <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); font-size: 14px; color: #ea4335; z-index: 10;">▼</div>
+                                </div>
+                                <div class="bar-label" style="">54% (67)</div>
+                            </div>
+                        </td>
+                        <td class="response-cell" style="background-color: white;">
+                            <div class="bar-wrapper" style="height: 80px;">
+                                <div class="distribution-bar" style="height: 34.526315789473685px; background-color: #d7191c; position: relative;">
+                                    
+                                </div>
+                                <div class="bar-label" style="">33% (41)</div>
+                            </div>
+                        </td>
+                        <td class="response-cell" style="background-color: white; border-left: 2px dashed #666;">
+                            <div class="bar-wrapper" style="height: 80px;">
+                                <div class="distribution-bar" style="height: 0px; background-color: #cccccc; position: relative;">
+
+                                </div>
+                                <div class="bar-label" style="">0% (0)</div>
+                            </div>
+                        </td>
+                    </tr>
+<tr data-actor="ai_gov_actor">
+                        <td class="actor-label" style="background-color: #f0f0f0; color: inherit;">
+                            AI Governance Actor
+                        </td>
+                        <td class="response-cell" style="background-color: #f0f0f0;">
+                            <div class="bar-wrapper" style="height: 80px;">
+                                <div class="distribution-bar" style="height: 5px; background-color: #2c7bb6; position: relative;">
+                                    
+                                </div>
+                                <div class="bar-label" style="">1% (1)</div>
+                            </div>
+                        </td>
+                        <td class="response-cell" style="background-color: #f0f0f0;">
+                            <div class="bar-wrapper" style="height: 80px;">
+                                <div class="distribution-bar" style="height: 5px; background-color: #abd9e9; position: relative;">
+                                    
+                                </div>
+                                <div class="bar-label" style="">3% (4)</div>
+                            </div>
+                        </td>
+                        <td class="response-cell" style="background-color: #f0f0f0;">
+                            <div class="bar-wrapper" style="height: 80px;">
+                                <div class="distribution-bar" style="height: 15.157894736842106px; background-color: #ffffbf; position: relative;">
+                                    
+                                </div>
+                                <div class="bar-label" style="">15% (18)</div>
+                            </div>
+                        </td>
+                        <td class="response-cell" style="background-color: #f0f0f0;">
+                            <div class="bar-wrapper" style="height: 80px;">
+                                <div class="distribution-bar" style="height: 60.631578947368425px; background-color: #fdae61; position: relative;">
+                                    <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); font-size: 14px; color: #ea4335; z-index: 10;">▼</div>
+                                </div>
+                                <div class="bar-label" style="">58% (72)</div>
+                            </div>
+                        </td>
+                        <td class="response-cell" style="background-color: #f0f0f0;">
+                            <div class="bar-wrapper" style="height: 80px;">
+                                <div class="distribution-bar" style="height: 24.42105263157895px; background-color: #d7191c; position: relative;">
+                                    
+                                </div>
+                                <div class="bar-label" style="">23% (29)</div>
+                            </div>
+                        </td>
+                        <td class="response-cell" style="background-color: #f0f0f0; border-left: 2px dashed #666;">
+                            <div class="bar-wrapper" style="height: 80px;">
+                                <div class="distribution-bar" style="height: 0px; background-color: #cccccc; position: relative;">
+
+                                </div>
+                                <div class="bar-label" style="">0% (0)</div>
+                            </div>
+                        </td>
+                    </tr>
+<tr data-actor="ai_user">
+                        <td class="actor-label" style="background-color: white; color: inherit;">
+                            AI User
+                        </td>
+                        <td class="response-cell" style="background-color: white;">
+                            <div class="bar-wrapper" style="height: 80px;">
+                                <div class="distribution-bar" style="height: 24.42105263157895px; background-color: #2c7bb6; position: relative;">
+                                    
+                                </div>
+                                <div class="bar-label" style="">23% (29)</div>
+                            </div>
+                        </td>
+                        <td class="response-cell" style="background-color: white;">
+                            <div class="bar-wrapper" style="height: 80px;">
+                                <div class="distribution-bar" style="height: 55.578947368421055px; background-color: #abd9e9; position: relative;">
+                                    <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); font-size: 14px; color: #ea4335; z-index: 10;">▼</div>
+                                </div>
+                                <div class="bar-label" style="">53% (66)</div>
+                            </div>
+                        </td>
+                        <td class="response-cell" style="background-color: white;">
+                            <div class="bar-wrapper" style="height: 80px;">
+                                <div class="distribution-bar" style="height: 16.0px; background-color: #ffffbf; position: relative;">
+                                    
+                                </div>
+                                <div class="bar-label" style="">15% (19)</div>
+                            </div>
+                        </td>
+                        <td class="response-cell" style="background-color: white;">
+                            <div class="bar-wrapper" style="height: 80px;">
+                                <div class="distribution-bar" style="height: 5px; background-color: #fdae61; position: relative;">
+                                    
+                                </div>
+                                <div class="bar-label" style="">4% (5)</div>
+                            </div>
+                        </td>
+                        <td class="response-cell" style="background-color: white;">
+                            <div class="bar-wrapper" style="height: 80px;">
+                                <div class="distribution-bar" style="height: 5px; background-color: #d7191c; position: relative;">
+                                    
+                                </div>
+                                <div class="bar-label" style="">4% (5)</div>
+                            </div>
+                        </td>
+                        <td class="response-cell" style="background-color: white; border-left: 2px dashed #666;">
+                            <div class="bar-wrapper" style="height: 80px;">
+                                <div class="distribution-bar" style="height: 0px; background-color: #cccccc; position: relative;">
+
+                                </div>
+                                <div class="bar-label" style="">0% (0)</div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+            </table>
+
+                        <div class="legend">
+                <div class="legend-item">
+                    <span class="legend-arrow">▼</span>
+                    <span>Median responsibility level</span>
+                </div>
+                <div class="legend-item" >
+                    <span>7.4 Lack of transparency or interpretability / Criteria: Responsibility</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+
+
+</body>
+</html>
