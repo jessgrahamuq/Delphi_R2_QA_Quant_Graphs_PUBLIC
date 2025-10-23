@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Risk 3 - Expert Severity Assessments</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        body {
+            font-family: 'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            border-radius: 8px;
+            border: 2px solid #000;
+            padding: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .banner {
+            background: #000;
+            color: white;
+            padding: 10px 20px;
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+        }
+        .chart-content {
+            padding: 15px 20px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .chart-container {
+            position: relative;
+            height: 500px;
+            margin-top: 0px;
+        }
+        .legend {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .legend-box {
+            width: 30px;
+            height: 16px;
+            border-radius: 2px;
+        }
+        .legend-line {
+            width: 30px;
+            height: 3px;
+            border-radius: 1px;
+        }
+        .controls {
+            margin-bottom: 10px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .toggle-button {
+            background: transparent;
+            color: #a32035;
+            border: none;
+            padding: 10px 0px;
+            border-radius: 0px;
+            font-family: 'Figtree', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: underline;
+            text-decoration-color: #a32035;
+            text-decoration-thickness: 2px;
+            text-underline-offset: 4px;
+        }
+        .toggle-button:hover {
+            color: #8a1b2d;
+            text-decoration-color: #8a1b2d;
+        }
+        .toggle-button.inactive {
+            text-decoration-color: #6b7280;
+            color: #6b7280;
+        }
+        .toggle-button.inactive:hover {
+            color: #4b5563;
+            text-decoration-color: #4b5563;
+        }
+        .mode-selector {
+            display: flex;
+            gap: 0;
+            border: 2px solid #a32035;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .mode-button {
+            background: white;
+            color: #a32035;
+            border: none;
+            padding: 10px 20px;
+            font-family: 'Figtree', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-right: 1px solid #a32035;
+        }
+        .mode-button:last-child {
+            border-right: none;
+        }
+        .mode-button.active {
+            background: #a32035;
+            color: white;
+        }
+        .mode-button:hover:not(.active) {
+            background: #fef2f2;
+        }
+        .severity-labels {
+            display: flex;
+            margin-top: -10px;
+            margin-bottom: 10px;
+            padding-left: 10px;
+            padding-right: 30px;
+            position: relative;
+            width: calc(100% - 40px);
+        }
+        .severity-label {
+            font-size: 17px;
+            font-weight: bold;
+            white-space: nowrap;
+            position: absolute;
+        }
+        .severity-label:nth-child(1) { left: 2%; transform: translateX(0%); }
+        .severity-label:nth-child(2) { left: 29%; transform: translateX(-50%); }
+        .severity-label:nth-child(3) { left: 52%; transform: translateX(-50%); }
+        .severity-label:nth-child(4) { left: 75%; transform: translateX(-50%); }
+        .severity-label:nth-child(5) { left: 100%; transform: translateX(-100%); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="banner">
+            1.3 Unequal performance across groups / Business as usual
+        </div>
+
+        <div class="chart-content">
+            <div class="controls">
+                <div class="control-group">
+                    <div class="mode-selector">
+                        <button id="modeExact" class="mode-button active">Exact Probabilities</button>
+                        <button id="modeExceedance" class="mode-button">Exceedance Probabilities</button>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <button id="toggleExperts" class="toggle-button inactive">▶ Show Individual Expert Estimates</button>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="severityChart"></canvas>
+            </div>
+
+            <div class="severity-labels">
+            <div class="severity-label" style="color: #28a745;">Negligible harm</div>
+            <div class="severity-label" style="color: #6c757d;">Minor harm</div>
+            <div class="severity-label" style="color: #ffc107;">Substantial harm</div>
+            <div class="severity-label" style="color: #fd7e14;">Severe harm</div>
+            <div class="severity-label" style="color: #dc3545;">Catastrophic harm</div>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-box" style="background: rgba(224, 231, 255, 0.6);"></div>
+                <span>90% interval (5th-95th percentile)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box" style="background: rgba(147, 197, 253, 0.7);"></div>
+                <span>50% interval (25th-75th percentile)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-line" style="background: #1e3a8a;"></div>
+                <span><strong>Median</strong></span>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <script>
+        // Data extracted from risk_number = 3, scenario = BAU
+        const expertData = [
+            {
+                        "id": "R_1Ce8w52RCHQLs1p",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 63.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 4.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 3.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_1plErg1LZmwrunm",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 50.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 40.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 10.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_1ur3bjw7OvpbZ9F",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 80.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 0.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_2EniWLo9gzfQodN",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 5.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 40.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 50.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 5.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 0.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_2EzUP8BZKGdrwWB",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 5.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 40.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 5.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_2X4Xs2Gc2u2Ps0R",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 3.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 25.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 50.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 2.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_2fHdDGh1lyUYMyb",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 40.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 0.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_2q3OHIZalGhbxwi",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 5.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 25.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 40.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 30.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_37wHRFiFx8t4q0C",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 15.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 50.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 15.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 10.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_46kwhbzWeYMfGuu",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 5.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 40.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 25.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 10.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_5MVYWrU2jDgoz7I",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 50.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_5OC5MATFT2ozxYL",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 1.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 69.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 10.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_6TNMlj1kE8BC9Zl",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 5.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 70.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 10.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 5.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_85HkRJVQQcbrwi4",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 50.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 50.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 0.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_916GLmWY89foLsv",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 5.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 15.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 50.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 0.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_97cfzV1NYVk4CLn",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 2.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 8.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 55.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 5.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_9hJ4jFkYAG263Zf",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 20.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 50.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 0.0
+                                    }
+                        ]
+            },
+            {
+                        "id": "R_9mEiYXx2W6CIsuT",
+                        "data": [
+                                    {
+                                                "sev": 1,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 2,
+                                                "prob": 0.0
+                                    },
+                                    {
+                                                "sev": 3,
+                                                "prob": 5.0
+                                    },
+                                    {
+                                                "sev": 4,
+                                                "prob": 30.0
+                                    },
+                                    {
+                                                "sev": 5,
+                                                "prob": 65.0
+                                    }
+                        ]
+            }
+];
+
+        // Calculate percentile
+        function calculatePercentile(sortedArray, percentile) {
+            const index = Math.floor(sortedArray.length * percentile);
+            return sortedArray[Math.min(index, sortedArray.length - 1)];
+        }
+
+        // Compute exceedance probabilities for each expert
+        function computeExceedance(expertData) {
+            return expertData.map(expert => {
+                const exceedance = [];
+                let cumulative = 0;
+
+                // Work backwards from sev 5 to sev 1
+                for (let sev = 5; sev >= 1; sev--) {
+                    const probAtSev = expert.data.find(d => d.sev === sev)?.prob || 0;
+                    cumulative += probAtSev;
+                    exceedance.push({ sev: sev, exceedanceProb: cumulative });
+                }
+
+                return { id: expert.id, exceedance: exceedance.reverse() };
+            });
+        }
+
+        // Compute uncertainty bands for exceedance
+        function computeUncertaintyBands(exceedanceData) {
+            const severityLevels = [1, 2, 3, 4, 5];
+
+            return severityLevels.map(sev => {
+                const probs = exceedanceData.map(expert =>
+                    expert.exceedance.find(e => e.sev === sev).exceedanceProb
+                );
+
+                const sorted = [...probs].sort((a, b) => a - b);
+
+                return {
+                    median: calculatePercentile(sorted, 0.5),
+                    p25: calculatePercentile(sorted, 0.25),
+                    p75: calculatePercentile(sorted, 0.75),
+                    p5: calculatePercentile(sorted, 0.05),
+                    p95: calculatePercentile(sorted, 0.95)
+                };
+            });
+        }
+
+        // Compute exact probability bands
+        function computeExactProbabilityBands(expertData) {
+            const severityLevels = [1, 2, 3, 4, 5];
+
+            return severityLevels.map(sev => {
+                const probs = expertData.map(expert => {
+                    const entry = expert.data.find(d => d.sev === sev);
+                    return entry ? entry.prob : 0;
+                });
+
+                const sorted = [...probs].sort((a, b) => a - b);
+
+                return {
+                    median: calculatePercentile(sorted, 0.5),
+                    p25: calculatePercentile(sorted, 0.25),
+                    p75: calculatePercentile(sorted, 0.75),
+                    p5: calculatePercentile(sorted, 0.05),
+                    p95: calculatePercentile(sorted, 0.95)
+                };
+            });
+        }
+
+        // Process data for both modes
+        const exceedanceData = computeExceedance(expertData);
+        const exceedanceChartData = computeUncertaintyBands(exceedanceData);
+        const exactChartData = computeExactProbabilityBands(expertData);
+
+        // Start with exact mode
+        let currentMode = 'exact';
+        const chartData = exactChartData;
+
+        const medianValues = chartData.map(d => d.median);
+        const p25Values = chartData.map(d => d.p25);
+        const p75Values = chartData.map(d => d.p75);
+        const p5Values = chartData.map(d => d.p5);
+        const p95Values = chartData.map(d => d.p95);
+
+        // Create datasets for individual experts - exact mode (initially hidden)
+        const individualExpertExactDatasets = expertData.map((expert, idx) => ({
+            label: `Expert ${idx + 1}`,
+            data: expert.data.map(d => d.prob),
+            borderColor: 'rgba(52, 152, 219, 0.3)',
+            backgroundColor: 'transparent',
+            borderWidth: 2,
+            tension: 0.4,
+            pointRadius: 0,
+            order: -1,
+            hidden: true
+        }));
+
+        // Create datasets for individual experts - exceedance mode (initially hidden)
+        const individualExpertExceedanceDatasets = exceedanceData.map((expert, idx) => ({
+            label: `Expert ${idx + 1}`,
+            data: expert.exceedance.map(e => e.exceedanceProb),
+            borderColor: 'rgba(52, 152, 219, 0.3)',
+            backgroundColor: 'transparent',
+            borderWidth: 2,
+            tension: 0.4,
+            pointRadius: 0,
+            order: -1,
+            hidden: true
+        }));
+
+        // Colors for each severity level
+        const severityColors = ['#28a745', '#6c757d', '#ffc107', '#fd7e14', '#dc3545'];
+
+        // Create chart with custom plugin for colored squares
+        const ctx = document.getElementById('severityChart').getContext('2d');
+
+        // Plugin to display values above median line points
+        const medianValuesPlugin = {
+            id: 'medianValues',
+            afterDatasetsDraw: (chart) => {
+                const ctx = chart.ctx;
+                const meta = chart.getDatasetMeta(4); // Median dataset is at index 4
+
+                ctx.save();
+                ctx.font = 'bold 12px Figtree, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'bottom';
+
+                meta.data.forEach((point, index) => {
+                    const value = chart.data.datasets[4].data[index];
+                    ctx.fillStyle = '#333';
+                    ctx.fillText(Math.round(value) + '%', point.x, point.y - 10);
+                });
+
+                ctx.restore();
+            }
+        };
+
+        // Fix blurry canvas on high-DPI displays
+        const dpr = window.devicePixelRatio || 1;
+        const canvas = document.getElementById('severityChart');
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        ctx.scale(dpr, dpr);
+
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Negligible', 'Minor', 'Substantial', 'Severe', 'Catastrophic'],
+                datasets: [
+                    {
+                        label: '90% Upper',
+                        data: p95Values,
+                        borderColor: 'transparent',
+                        backgroundColor: 'rgba(224, 231, 255, 0.6)',
+                        fill: '+1',
+                        pointRadius: 0,
+                        tension: 0.4,
+                        order: 4
+                    },
+                    {
+                        label: '90% Lower',
+                        data: p5Values,
+                        borderColor: 'transparent',
+                        backgroundColor: 'rgba(224, 231, 255, 0.6)',
+                        fill: false,
+                        pointRadius: 0,
+                        tension: 0.4,
+                        order: 3
+                    },
+                    {
+                        label: '50% Upper (Q3)',
+                        data: p75Values,
+                        borderColor: 'transparent',
+                        backgroundColor: 'rgba(147, 197, 253, 0.7)',
+                        fill: '+1',
+                        pointRadius: 0,
+                        tension: 0.4,
+                        order: 2
+                    },
+                    {
+                        label: '50% Lower (Q1)',
+                        data: p25Values,
+                        borderColor: 'transparent',
+                        backgroundColor: 'rgba(147, 197, 253, 0.7)',
+                        fill: false,
+                        pointRadius: 0,
+                        tension: 0.4,
+                        order: 1
+                    },
+                    {
+                        label: 'Median',
+                        data: medianValues,
+                        borderColor: '#1e3a8a',
+                        backgroundColor: 'transparent',
+                        borderWidth: 4,
+                        tension: 0.4,
+                        pointRadius: 8,
+                        pointBackgroundColor: severityColors,
+                        pointBorderColor: severityColors,
+                        pointBorderWidth: 2,
+                        order: 0
+                    },
+                    ...individualExpertExactDatasets
+                ]
+            },
+            plugins: [medianValuesPlugin],
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    title: {
+                        display: false
+                    },
+                    tooltip: {
+                        bodyFont: {
+                            family: 'Figtree, sans-serif'
+                        },
+                        titleFont: {
+                            family: 'Figtree, sans-serif'
+                        },
+                        callbacks: {
+                            label: function(context) {
+                                const idx = context.dataIndex;
+                                if (context.datasetIndex === 4) {
+                                    return [
+                                        `Median: ${chart.data.datasets[4].data[idx].toFixed(1)}%`,
+                                        `50% interval: ${chart.data.datasets[3].data[idx].toFixed(1)}% - ${chart.data.datasets[2].data[idx].toFixed(1)}%`,
+                                        `90% interval: ${chart.data.datasets[1].data[idx].toFixed(1)}% - ${chart.data.datasets[0].data[idx].toFixed(1)}%`
+                                    ];
+                                }
+                                return null;
+                            },
+                            filter: function(tooltipItem) {
+                                return tooltipItem.datasetIndex === 4;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        min: 0,
+                        max: 100,
+                        title: {
+                            display: true,
+                            text: 'Probability (%)',
+                            font: {
+                                family: 'Figtree, sans-serif',
+                                size: 16,
+                                weight: 'bold'
+                            },
+                            color: '#000'
+                        },
+                        ticks: {
+                            font: {
+                                family: 'Figtree, sans-serif',
+                                size: 14
+                            },
+                            color: '#000'
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.25)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: false
+                        },
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            display: false
+                        }
+                    }
+                },
+                layout: {
+                    padding: {
+                        left: 10,
+                        right: 35,
+                        bottom: 25
+                    }
+                }
+            }
+        });
+
+        // UI Controls
+        let expertsVisible = false;
+        const toggleButton = document.getElementById('toggleExperts');
+        const modeExactBtn = document.getElementById('modeExact');
+        const modeExceedanceBtn = document.getElementById('modeExceedance');
+
+        // Function to update chart mode
+        function updateChartMode(mode) {
+            currentMode = mode;
+            expertsVisible = false; // Reset expert visibility when switching modes
+
+            if (mode === 'exact') {
+                // Update chart data to exact probabilities
+                const data = exactChartData;
+                chart.data.datasets[0].data = data.map(d => d.p95);
+                chart.data.datasets[1].data = data.map(d => d.p5);
+                chart.data.datasets[2].data = data.map(d => d.p75);
+                chart.data.datasets[3].data = data.map(d => d.p25);
+                chart.data.datasets[4].data = data.map(d => d.median);
+
+                // Replace individual expert datasets with exact data
+                individualExpertExactDatasets.forEach((dataset, idx) => {
+                    chart.data.datasets[5 + idx] = { ...dataset, hidden: true };
+                });
+
+                modeExactBtn.classList.add('active');
+                modeExceedanceBtn.classList.remove('active');
+            } else {
+                // Update chart data to exceedance
+                const data = exceedanceChartData;
+                chart.data.datasets[0].data = data.map(d => d.p95);
+                chart.data.datasets[1].data = data.map(d => d.p5);
+                chart.data.datasets[2].data = data.map(d => d.p75);
+                chart.data.datasets[3].data = data.map(d => d.p25);
+                chart.data.datasets[4].data = data.map(d => d.median);
+
+                // Replace individual expert datasets with exceedance data
+                individualExpertExceedanceDatasets.forEach((dataset, idx) => {
+                    chart.data.datasets[5 + idx] = { ...dataset, hidden: true };
+                });
+
+                modeExactBtn.classList.remove('active');
+                modeExceedanceBtn.classList.add('active');
+            }
+
+            // Reset expert visibility button
+            toggleButton.textContent = '▶ Show Individual Expert Estimates';
+            toggleButton.classList.add('inactive');
+
+            chart.update();
+        }
+
+        // Mode switch handlers
+        modeExactBtn.addEventListener('click', () => updateChartMode('exact'));
+        modeExceedanceBtn.addEventListener('click', () => updateChartMode('exceedance'));
+
+        // Toggle individual expert lines
+        toggleButton.addEventListener('click', () => {
+            expertsVisible = !expertsVisible;
+
+            // Toggle visibility of individual expert datasets
+            for (let i = 0; i < expertData.length; i++) {
+                chart.data.datasets[5 + i].hidden = !expertsVisible;
+            }
+
+            // Update button text and style
+            if (expertsVisible) {
+                toggleButton.textContent = '▼ Hide Individual Expert Estimates';
+                toggleButton.classList.remove('inactive');
+            } else {
+                toggleButton.textContent = '▶ Show Individual Expert Estimates';
+                toggleButton.classList.add('inactive');
+            }
+
+            chart.update();
+        });
+    </script>
+</body>
+</html>

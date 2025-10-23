@@ -3525,16 +3525,7 @@
         // Create chart with custom plugin for colored squares
         const canvas = document.getElementById('severityChart');
 
-        // Set up high-DPI canvas BEFORE creating chart
-        const dpr = window.devicePixelRatio || 2;
-        const rect = canvas.getBoundingClientRect();
-        canvas.width = rect.width * dpr;
-        canvas.height = rect.height * dpr;
-        canvas.style.width = rect.width + 'px';
-        canvas.style.height = rect.height + 'px';
-
-        const ctx = canvas.getContext('2d');
-        ctx.scale(dpr, dpr);
+        
 
         // Track hover state
         let hoveredExpertIndex = null;
