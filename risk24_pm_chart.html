@@ -2556,6 +2556,14 @@
             }
         };
 
+        // Fix blurry canvas on high-DPI displays
+        const dpr = window.devicePixelRatio || 1;
+        const canvas = document.getElementById('severityChart');
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        ctx.scale(dpr, dpr);
+
         // Add mouse move handler for hover interaction
         const chartCanvas = document.getElementById('severityChart');
         const tooltip = document.getElementById('expertTooltip');
