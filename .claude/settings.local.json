@@ -1,11 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(python3:*)",
-      "Bash(rm:*)",
-      "Bash(for file in risk*_bau_chart.html risk*_pm_chart.html)",
-      "Bash(do)",
-      "Bash(done)"
+      "Bash(git checkout:*)",
+      "Bash(for i in {1..24})",
+      "Bash(do grep -A2 \"risk$i_bau_chart.html\" index.html)"
     ],
     "deny": [],
     "ask": []

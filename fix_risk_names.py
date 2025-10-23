@@ -6,32 +6,32 @@ Fix risk names in banner to match the filename.
 from pathlib import Path
 import re
 
-# Mapping of risk numbers to names (you'll need to provide the actual names)
+# Mapping of risk numbers to names from index.html
 RISK_NAMES = {
     1: "1.1 Unfair discrimination and misrepresentation",
-    2: "1.2 Erosion of privacy",
-    3: "2.1 Underuse or non-use of AI due to misplaced fears",
-    4: "2.2 Unauthorized and harmful uses",
-    5: "3.1 Overreliance and unsafe use",
-    6: "3.2 Goal misspecification or gaming",
-    7: "3.3 Hazardous task execution",
-    8: "4.1 Harmful content generation",
-    9: "4.2 Malicious use",
-    10: "5.1 Value misalignment",
-    11: "5.2 Persuasive and manipulative capabilities",
-    12: "6.1 AI-enabled cyberattacks",
-    13: "6.2 Accidents and structural failures",
-    14: "6.3 Poor product design",
-    15: "7.1 Intellectual property violations",
-    16: "7.2 Unaccountable AI-caused harms",
-    17: "7.3 Unfair market dynamics",
-    18: "8.1 Negative impacts on labor markets",
-    19: "8.2 Geopolitical instability",
-    20: "8.3 Societal fragmentation and polarization",
-    21: "9.1 Model theft",
-    22: "9.2 Data poisoning and other tampering",
-    23: "10.1 Autonomous decision-making",
-    24: "10.2 Loss of control and autonomous replication"
+    2: "1.2 Exposure to toxic content",
+    3: "1.3 Unequal performance across groups",
+    4: "2.1 Compromise of privacy by obtaining, leaking or correctly inferring sensitive information",
+    5: "2.2 AI system security vulnerabilities and attacks",
+    6: "3.2 False or misleading information",
+    7: "3.1 Pollution of information ecosystem and loss of consensus reality",
+    8: "4.1 Disinformation, surveillance, and influence at scale",
+    9: "4.3 Cyberattacks, weapon development or use, and mass harm",
+    10: "4.2 Fraud, scams, and targeted manipulation",
+    11: "5.1 Overreliance and unsafe use",
+    12: "5.2 Loss of human agency and autonomy",
+    13: "6.1 Power centralization and unfair distribution of benefits",
+    14: "6.2 Increased inequality and decline in employment quality",
+    15: "6.3 Economic and cultural devaluation of human effort",
+    16: "6.4 Competitive dynamics",
+    17: "6.5 Governance failure",
+    18: "6.6 Environmental harm",
+    19: "7.1 AI pursuing its own goals in conflict with human goals or values",
+    20: "7.2 AI possessing dangerous capabilities",
+    21: "7.3 Lack of capability or robustness",
+    22: "7.4 Lack of transparency or interpretability",
+    23: "7.5 AI welfare and rights",
+    24: "7.6 Multi-agent risks"
 }
 
 def fix_risk_name(file_path):
