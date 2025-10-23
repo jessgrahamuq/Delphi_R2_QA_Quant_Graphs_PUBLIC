@@ -170,12 +170,24 @@
             font-weight: bold;
             white-space: nowrap;
             position: absolute;
+            text-align: center;
         }
         .severity-label:nth-child(1) { left: 8%; transform: translateX(0%); }
         .severity-label:nth-child(2) { left: 32%; transform: translateX(-50%); }
         .severity-label:nth-child(3) { left: 52%; transform: translateX(-50%); }
         .severity-label:nth-child(4) { left: 70%; transform: translateX(-50%); }
         .severity-label:nth-child(5) { left: 95%; transform: translateX(-100%); }
+        .or-worse {
+            font-size: 11px;
+            font-weight: normal;
+            display: none;
+        }
+        .severity-labels.exceedance-mode .or-worse {
+            display: block;
+        }
+        .severity-labels.exceedance-mode .severity-label:nth-child(5) .or-worse {
+            display: none;
+        }
         .expert-tooltip {
             position: absolute;
             background: white;
@@ -225,11 +237,26 @@
             </div>
 
             <div class="severity-labels">
-            <div class="severity-label" style="color: #28a745;">Negligible harm</div>
-            <div class="severity-label" style="color: #6c757d;">Minor harm</div>
-            <div class="severity-label" style="color: #ffc107;">Substantial harm</div>
-            <div class="severity-label" style="color: #fd7e14;">Severe harm</div>
-            <div class="severity-label" style="color: #dc3545;">Catastrophic harm</div>
+            <div class="severity-label" style="color: #28a745;">
+                <div>Negligible harm</div>
+                <div class="or-worse">(or worse)</div>
+            </div>
+            <div class="severity-label" style="color: #6c757d;">
+                <div>Minor harm</div>
+                <div class="or-worse">(or worse)</div>
+            </div>
+            <div class="severity-label" style="color: #ffc107;">
+                <div>Substantial harm</div>
+                <div class="or-worse">(or worse)</div>
+            </div>
+            <div class="severity-label" style="color: #fd7e14;">
+                <div>Severe harm</div>
+                <div class="or-worse">(or worse)</div>
+            </div>
+            <div class="severity-label" style="color: #dc3545;">
+                <div>Catastrophic harm</div>
+                <div class="or-worse">(or worse)</div>
+            </div>
         </div>
 
         <div class="legend">
@@ -2344,26 +2371,11 @@
             }
 
             // Update severity labels based on mode
-            const severityLabels = document.querySelectorAll('.severity-label');
-            const baseLabels = ['Negligible harm', 'Minor harm', 'Substantial harm', 'Severe harm', 'Catastrophic harm'];
-
-            severityLabels.forEach((label, index) => {
-                if (mode === 'exceedance' && index < 4) {
-                    label.textContent = baseLabels[index] + ' (or worse)';
-                } else {
-                    label.textContent = baseLabels[index];
-                }
-            });
-
-            // Adjust label positions based on mode
+            const severityLabelsContainer = document.querySelector('.severity-labels');
             if (mode === 'exceedance') {
-                severityLabels[0].style.left = '2%';  // Negligible
-                severityLabels[3].style.left = '72%'; // Severe
-                severityLabels[4].style.left = '95%'; // Catastrophic
+                severityLabelsContainer.classList.add('exceedance-mode');
             } else {
-                severityLabels[0].style.left = '8%';  // Negligible
-                severityLabels[3].style.left = '70%'; // Severe
-                severityLabels[4].style.left = '95%'; // Catastrophic
+                severityLabelsContainer.classList.remove('exceedance-mode');
             }
 
             chart.update();
