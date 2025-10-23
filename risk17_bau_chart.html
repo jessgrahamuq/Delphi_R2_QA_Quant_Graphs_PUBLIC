@@ -49,6 +49,14 @@
             height: 280px;
             margin-top: 0px;
         }
+        canvas {
+            -webkit-font-smoothing: subpixel-antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        #severityChart {
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: auto;
+        }
         .legend {
             margin-top: 8px;
             padding: 6px 8px;
@@ -3815,11 +3823,13 @@
         });
 
         // Fix blurry canvas on high-DPI displays
-        const dpr = window.devicePixelRatio || 1;
+        const dpr = window.devicePixelRatio || 2;
         const canvas = document.getElementById('severityChart');
         const rect = canvas.getBoundingClientRect();
         canvas.width = rect.width * dpr;
         canvas.height = rect.height * dpr;
+        canvas.style.width = rect.width + 'px';
+        canvas.style.height = rect.height + 'px';
         ctx.scale(dpr, dpr);
 
         const chart = new Chart(ctx, {
@@ -3843,6 +3853,7 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                devicePixelRatio: window.devicePixelRatio || 2,
                 interaction: {
                     mode: 'nearest',
                     intersect: true
