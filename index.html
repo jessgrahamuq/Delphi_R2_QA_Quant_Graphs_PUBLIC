@@ -3,205 +3,628 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Delphi R2 QA Quant Graphs - Index</title>
+    <title>Delphi Round 2 - Expert Assessment Charts</title>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            max-width: 1200px;
+            font-family: 'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 20px;
-            background-color: #f5f5f5;
+            padding: 40px 20px;
+            background: #f5f5f5;
+            color: #333;
         }
         h1 {
-            color: #333;
-            border-bottom: 3px solid #4CAF50;
-            padding-bottom: 10px;
+            color: #000;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 36px;
         }
-        h2 {
-            color: #555;
-            margin-top: 30px;
-            border-bottom: 2px solid #ddd;
-            padding-bottom: 5px;
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 18px;
         }
-        .chart-category {
-            background-color: white;
-            padding: 20px;
-            margin: 20px 0;
+        .section {
+            background: white;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border: 2px solid #000;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
-        ul {
-            list-style-type: none;
-            padding: 0;
+        .section-title {
+            background: #000;
+            color: white;
+            padding: 12px 20px;
+            margin: -30px -30px 20px -30px;
+            font-size: 22px;
+            font-weight: 600;
+            border-radius: 6px 6px 0 0;
         }
-        li {
-            margin: 8px 0;
+        .section-description {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 14px;
+            line-height: 1.6;
         }
-        a {
-            color: #2196F3;
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+        }
+        .chart-link {
+            display: block;
+            padding: 15px 20px;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 6px;
             text-decoration: none;
-            padding: 5px 10px;
-            display: inline-block;
-            transition: background-color 0.3s;
+            color: #333;
+            transition: all 0.2s;
+            font-weight: 500;
         }
-        a:hover {
-            background-color: #e3f2fd;
-            border-radius: 4px;
+        .chart-link:hover {
+            background: #a32035;
+            color: white;
+            border-color: #a32035;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(163, 32, 53, 0.2);
+        }
+        .chart-link .risk-num {
+            font-weight: 700;
+            font-size: 16px;
+        }
+        .chart-link .chart-type {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+        .chart-link:hover .chart-type {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        .subsection {
+            margin-bottom: 30px;
+        }
+        .subsection:last-child {
+            margin-bottom: 0;
+        }
+        .subsection-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #a32035;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #a32035;
         }
     </style>
 </head>
 <body>
-    <h1>Delphi R2 QA Quant Graphs - Index</h1>
+    <h1>Delphi Round 2 Expert Assessment Charts</h1>
+    <p class="subtitle">Quantitative Analysis of AI Risks</p>
 
-    <div class="chart-category">
-        <h2>Severity Charts - BAU (Business As Usual)</h2>
-        <ul>
-            <li><a href="Sev_Charts/risk1_bau_chart_updated.html">1.1 Unfair discrimination and misrepresentation - BAU (Updated)</a></li>
-            <li><a href="Sev_Charts/risk1_bau_chart.html">1.1 Unfair discrimination and misrepresentation - BAU</a></li>
-            <li><a href="Sev_Charts/risk2_bau_chart.html">1.2 Exposure to toxic content - BAU</a></li>
-            <li><a href="Sev_Charts/risk3_bau_chart.html">1.3 Unequal performance across groups - BAU</a></li>
-            <li><a href="Sev_Charts/risk4_bau_chart.html">2.1 Compromise of privacy by obtaining, leaking or correctly inferring sensitive information - BAU</a></li>
-            <li><a href="Sev_Charts/risk5_bau_chart.html">2.2 AI system security vulnerabilities and attacks - BAU</a></li>
-            <li><a href="Sev_Charts/risk6_bau_chart.html">3.2 False or misleading information - BAU</a></li>
-            <li><a href="Sev_Charts/risk7_bau_chart.html">3.1 Pollution of information ecosystem and loss of consensus reality - BAU</a></li>
-            <li><a href="Sev_Charts/risk8_bau_chart.html">4.1 Disinformation, surveillance, and influence at scale - BAU</a></li>
-            <li><a href="Sev_Charts/risk9_bau_chart.html">4.3 Cyberattacks, weapon development or use, and mass harm - BAU</a></li>
-            <li><a href="Sev_Charts/risk10_bau_chart.html">4.2 Fraud, scams, and targeted manipulation - BAU</a></li>
-            <li><a href="Sev_Charts/risk11_bau_chart.html">5.1 Overreliance and unsafe use - BAU</a></li>
-            <li><a href="Sev_Charts/risk12_bau_chart.html">5.2 Loss of human agency and autonomy - BAU</a></li>
-            <li><a href="Sev_Charts/risk13_bau_chart.html">6.1 Power centralization and unfair distribution of benefits - BAU</a></li>
-            <li><a href="Sev_Charts/risk14_bau_chart.html">6.2 Increased inequality and decline in employment quality - BAU</a></li>
-            <li><a href="Sev_Charts/risk15_bau_chart.html">6.3 Economic and cultural devaluation of human effort - BAU</a></li>
-            <li><a href="Sev_Charts/risk16_bau_chart.html">6.4 Competitive dynamics - BAU</a></li>
-            <li><a href="Sev_Charts/risk17_bau_chart.html">6.5 Governance failure - BAU</a></li>
-            <li><a href="Sev_Charts/risk18_bau_chart.html">6.6 Environmental harm - BAU</a></li>
-            <li><a href="Sev_Charts/risk19_bau_chart.html">7.1 AI pursuing its own goals in conflict with human goals or values - BAU</a></li>
-            <li><a href="Sev_Charts/risk20_bau_chart.html">7.2 AI possessing dangerous capabilities - BAU</a></li>
-            <li><a href="Sev_Charts/risk21_bau_chart.html">7.3 Lack of capability or robustness - BAU</a></li>
-            <li><a href="Sev_Charts/risk22_bau_chart.html">7.4 Lack of transparency or interpretability - BAU</a></li>
-            <li><a href="Sev_Charts/risk23_bau_chart.html">7.5 AI welfare and rights - BAU</a></li>
-            <li><a href="Sev_Charts/risk24_bau_chart.html">7.6 Multi-agent risks - BAU</a></li>
-        </ul>
+    <!-- Vulnerability Charts -->
+    <div class="section">
+        <div class="section-title">Vulnerability & Responsibility Charts</div>
+        <p class="section-description">Expert assessments of sector and actor vulnerability and responsibility across 24 AI risks. Charts show response distributions with consensus indicators (dark background with white badge when ≥60% on median AND ≥90% within ±1).</p>
+
+        <div class="subsection">
+            <div class="subsection-title">Sector Vulnerability</div>
+            <div class="chart-grid">
+                <a href="Sec_Charts/risk_1_sector_vulnerability.html" class="chart-link">
+                    <div class="risk-num">1.1 Unfair discrimination and misrepresentation</div>
+                    <div class="chart-type">Sector Vulnerability</div>
+                </a>
+                <a href="Sec_Charts/risk_2_sector_vulnerability.html" class="chart-link">
+                    <div class="risk-num">1.2 Exposure to toxic content</div>
+                    <div class="chart-type">Sector Vulnerability</div>
+                </a>
+                <a href="Sec_Charts/risk_3_sector_vulnerability.html" class="chart-link">
+                    <div class="risk-num">1.3 Unequal performance across groups</div>
+                    <div class="chart-type">Sector Vulnerability</div>
+                </a>
+                <a href="Sec_Charts/risk_4_sector_vulnerability.html" class="chart-link">
+                    <div class="risk-num">2.1 Compromise of privacy by obtaining, leaking or correctly inferring sensitive information</div>
+                    <div class="chart-type">Sector Vulnerability</div>
+                </a>
+                <a href="Sec_Charts/risk_5_sector_vulnerability.html" class="chart-link">
+                    <div class="risk-num">2.2 AI system security vulnerabilities and attacks</div>
+                    <div class="chart-type">Sector Vulnerability</div>
+                </a>
+                <a href="Sec_Charts/risk_6_sector_vulnerability.html" class="chart-link">
+                    <div class="risk-num">3.2 False or misleading information</div>
+                    <div class="chart-type">Sector Vulnerability</div>
+                </a>
+                <a href="Sec_Charts/risk_7_sector_vulnerability.html" class="chart-link">
+                    <div class="risk-num">3.1 Pollution of information ecosystem and loss of consensus reality</div>
+                    <div class="chart-type">Sector Vulnerability</div>
+                </a>
+                <a href="Sec_Charts/risk_8_sector_vulnerability.html" class="chart-link">
+                    <div class="risk-num">4.1 Disinformation, surveillance, and influence at scale</div>
+                    <div class="chart-type">Sector Vulnerability</div>
+                </a>
+                <a href="Sec_Charts/risk_9_sector_vulnerability.html" class="chart-link">
+                    <div class="risk-num">4.3 Cyberattacks, weapon development or use, and mass harm</div>
+                    <div class="chart-type">Sector Vulnerability</div>
+                </a>
+                <a href="Sec_Charts/risk_10_sector_vulnerability.html" class="chart-link">
+                    <div class="risk-num">4.2 Fraud, scams, and targeted manipulation</div>
+                    <div class="chart-type">Sector Vulnerability</div>
+                </a>
+                <a href="Sec_Charts/risk_11_sector_vulnerability.html" class="chart-link">
+                    <div class="risk-num">5.1 Overreliance and unsafe use</div>
+                    <div class="chart-type">Sector Vulnerability</div>
+                </a>
+                <a href="Sec_Charts/risk_12_sector_vulnerability.html" class="chart-link">
+                    <div class="risk-num">5.2 Loss of human agency and autonomy</div>
+                    <div class="chart-type">Sector Vulnerability</div>
+                </a>
+                <a href="Sec_Charts/risk_13_sector_vulnerability.html" class="chart-link">
+                    <div class="risk-num">6.1 Power centralization and unfair distribution of benefits</div>
+                    <div class="chart-type">Sector Vulnerability</div>
+                </a>
+                <a href="Sec_Charts/risk_14_sector_vulnerability.html" class="chart-link">
+                    <div class="risk-num">6.2 Increased inequality and decline in employment quality</div>
+                    <div class="chart-type">Sector Vulnerability</div>
+                </a>
+                <a href="Sec_Charts/risk_15_sector_vulnerability.html" class="chart-link">
+                    <div class="risk-num">6.3 Economic and cultural devaluation of human effort</div>
+                    <div class="chart-type">Sector Vulnerability</div>
+                </a>
+                <a href="Sec_Charts/risk_16_sector_vulnerability.html" class="chart-link">
+                    <div class="risk-num">6.4 Competitive dynamics</div>
+                    <div class="chart-type">Sector Vulnerability</div>
+                </a>
+                <a href="Sec_Charts/risk_17_sector_vulnerability.html" class="chart-link">
+                    <div class="risk-num">6.5 Governance failure</div>
+                    <div class="chart-type">Sector Vulnerability</div>
+                </a>
+                <a href="Sec_Charts/risk_18_sector_vulnerability.html" class="chart-link">
+                    <div class="risk-num">6.6 Environmental harm</div>
+                    <div class="chart-type">Sector Vulnerability</div>
+                </a>
+                <a href="Sec_Charts/risk_19_sector_vulnerability.html" class="chart-link">
+                    <div class="risk-num">7.1 AI pursuing its own goals in conflict with human goals or values</div>
+                    <div class="chart-type">Sector Vulnerability</div>
+                </a>
+                <a href="Sec_Charts/risk_20_sector_vulnerability.html" class="chart-link">
+                    <div class="risk-num">7.2 AI possessing dangerous capabilities</div>
+                    <div class="chart-type">Sector Vulnerability</div>
+                </a>
+                <a href="Sec_Charts/risk_21_sector_vulnerability.html" class="chart-link">
+                    <div class="risk-num">7.3 Lack of capability or robustness</div>
+                    <div class="chart-type">Sector Vulnerability</div>
+                </a>
+                <a href="Sec_Charts/risk_22_sector_vulnerability.html" class="chart-link">
+                    <div class="risk-num">7.4 Lack of transparency or interpretability</div>
+                    <div class="chart-type">Sector Vulnerability</div>
+                </a>
+                <a href="Sec_Charts/risk_23_sector_vulnerability.html" class="chart-link">
+                    <div class="risk-num">7.5 AI welfare and rights</div>
+                    <div class="chart-type">Sector Vulnerability</div>
+                </a>
+                <a href="Sec_Charts/risk_24_sector_vulnerability.html" class="chart-link">
+                    <div class="risk-num">7.6 Multi-agent risks</div>
+                    <div class="chart-type">Sector Vulnerability</div>
+                </a>
+            </div>
+        </div>
+
+        <div class="subsection">
+            <div class="subsection-title">Actor Vulnerability</div>
+            <div class="chart-grid">
+                <a href="Vuln_Charts/risk1_vuln_actors_chart.html" class="chart-link">
+                    <div class="risk-num">1.1 Unfair discrimination and misrepresentation</div>
+                    <div class="chart-type">Actor Vulnerability</div>
+                </a>
+                <a href="Vuln_Charts/risk2_vuln_actors_chart.html" class="chart-link">
+                    <div class="risk-num">1.2 Exposure to toxic content</div>
+                    <div class="chart-type">Actor Vulnerability</div>
+                </a>
+                <a href="Vuln_Charts/risk3_vuln_actors_chart.html" class="chart-link">
+                    <div class="risk-num">1.3 Unequal performance across groups</div>
+                    <div class="chart-type">Actor Vulnerability</div>
+                </a>
+                <a href="Vuln_Charts/risk4_vuln_actors_chart.html" class="chart-link">
+                    <div class="risk-num">2.1 Compromise of privacy by obtaining, leaking or correctly inferring sensitive information</div>
+                    <div class="chart-type">Actor Vulnerability</div>
+                </a>
+                <a href="Vuln_Charts/risk5_vuln_actors_chart.html" class="chart-link">
+                    <div class="risk-num">2.2 AI system security vulnerabilities and attacks</div>
+                    <div class="chart-type">Actor Vulnerability</div>
+                </a>
+                <a href="Vuln_Charts/risk6_vuln_actors_chart.html" class="chart-link">
+                    <div class="risk-num">3.2 False or misleading information</div>
+                    <div class="chart-type">Actor Vulnerability</div>
+                </a>
+                <a href="Vuln_Charts/risk7_vuln_actors_chart.html" class="chart-link">
+                    <div class="risk-num">3.1 Pollution of information ecosystem and loss of consensus reality</div>
+                    <div class="chart-type">Actor Vulnerability</div>
+                </a>
+                <a href="Vuln_Charts/risk8_vuln_actors_chart.html" class="chart-link">
+                    <div class="risk-num">4.1 Disinformation, surveillance, and influence at scale</div>
+                    <div class="chart-type">Actor Vulnerability</div>
+                </a>
+                <a href="Vuln_Charts/risk9_vuln_actors_chart.html" class="chart-link">
+                    <div class="risk-num">4.3 Cyberattacks, weapon development or use, and mass harm</div>
+                    <div class="chart-type">Actor Vulnerability</div>
+                </a>
+                <a href="Vuln_Charts/risk10_vuln_actors_chart.html" class="chart-link">
+                    <div class="risk-num">4.2 Fraud, scams, and targeted manipulation</div>
+                    <div class="chart-type">Actor Vulnerability</div>
+                </a>
+                <a href="Vuln_Charts/risk11_vuln_actors_chart.html" class="chart-link">
+                    <div class="risk-num">5.1 Overreliance and unsafe use</div>
+                    <div class="chart-type">Actor Vulnerability</div>
+                </a>
+                <a href="Vuln_Charts/risk12_vuln_actors_chart.html" class="chart-link">
+                    <div class="risk-num">5.2 Loss of human agency and autonomy</div>
+                    <div class="chart-type">Actor Vulnerability</div>
+                </a>
+                <a href="Vuln_Charts/risk13_vuln_actors_chart.html" class="chart-link">
+                    <div class="risk-num">6.1 Power centralization and unfair distribution of benefits</div>
+                    <div class="chart-type">Actor Vulnerability</div>
+                </a>
+                <a href="Vuln_Charts/risk14_vuln_actors_chart.html" class="chart-link">
+                    <div class="risk-num">6.2 Increased inequality and decline in employment quality</div>
+                    <div class="chart-type">Actor Vulnerability</div>
+                </a>
+                <a href="Vuln_Charts/risk15_vuln_actors_chart.html" class="chart-link">
+                    <div class="risk-num">6.3 Economic and cultural devaluation of human effort</div>
+                    <div class="chart-type">Actor Vulnerability</div>
+                </a>
+                <a href="Vuln_Charts/risk16_vuln_actors_chart.html" class="chart-link">
+                    <div class="risk-num">6.4 Competitive dynamics</div>
+                    <div class="chart-type">Actor Vulnerability</div>
+                </a>
+                <a href="Vuln_Charts/risk17_vuln_actors_chart.html" class="chart-link">
+                    <div class="risk-num">6.5 Governance failure</div>
+                    <div class="chart-type">Actor Vulnerability</div>
+                </a>
+                <a href="Vuln_Charts/risk18_vuln_actors_chart.html" class="chart-link">
+                    <div class="risk-num">6.6 Environmental harm</div>
+                    <div class="chart-type">Actor Vulnerability</div>
+                </a>
+                <a href="Vuln_Charts/risk19_vuln_actors_chart.html" class="chart-link">
+                    <div class="risk-num">7.1 AI pursuing its own goals in conflict with human goals or values</div>
+                    <div class="chart-type">Actor Vulnerability</div>
+                </a>
+                <a href="Vuln_Charts/risk20_vuln_actors_chart.html" class="chart-link">
+                    <div class="risk-num">7.2 AI possessing dangerous capabilities</div>
+                    <div class="chart-type">Actor Vulnerability</div>
+                </a>
+                <a href="Vuln_Charts/risk21_vuln_actors_chart.html" class="chart-link">
+                    <div class="risk-num">7.3 Lack of capability or robustness</div>
+                    <div class="chart-type">Actor Vulnerability</div>
+                </a>
+                <a href="Vuln_Charts/risk22_vuln_actors_chart.html" class="chart-link">
+                    <div class="risk-num">7.4 Lack of transparency or interpretability</div>
+                    <div class="chart-type">Actor Vulnerability</div>
+                </a>
+                <a href="Vuln_Charts/risk23_vuln_actors_chart.html" class="chart-link">
+                    <div class="risk-num">7.5 AI welfare and rights</div>
+                    <div class="chart-type">Actor Vulnerability</div>
+                </a>
+                <a href="Vuln_Charts/risk24_vuln_actors_chart.html" class="chart-link">
+                    <div class="risk-num">7.6 Multi-agent risks</div>
+                    <div class="chart-type">Actor Vulnerability</div>
+                </a>
+            </div>
+        </div>
+
+        <div class="subsection">
+            <div class="subsection-title">Actor Responsibility</div>
+            <div class="chart-grid">
+                <a href="Resp_Charts/risk1_resp_actors_chart.html" class="chart-link">
+                    <div class="risk-num">1.1 Unfair discrimination and misrepresentation</div>
+                    <div class="chart-type">Actor Responsibility</div>
+                </a>
+                <a href="Resp_Charts/risk2_resp_actors_chart.html" class="chart-link">
+                    <div class="risk-num">1.2 Exposure to toxic content</div>
+                    <div class="chart-type">Actor Responsibility</div>
+                </a>
+                <a href="Resp_Charts/risk3_resp_actors_chart.html" class="chart-link">
+                    <div class="risk-num">1.3 Unequal performance across groups</div>
+                    <div class="chart-type">Actor Responsibility</div>
+                </a>
+                <a href="Resp_Charts/risk4_resp_actors_chart.html" class="chart-link">
+                    <div class="risk-num">2.1 Compromise of privacy by obtaining, leaking or correctly inferring sensitive information</div>
+                    <div class="chart-type">Actor Responsibility</div>
+                </a>
+                <a href="Resp_Charts/risk5_resp_actors_chart.html" class="chart-link">
+                    <div class="risk-num">2.2 AI system security vulnerabilities and attacks</div>
+                    <div class="chart-type">Actor Responsibility</div>
+                </a>
+                <a href="Resp_Charts/risk6_resp_actors_chart.html" class="chart-link">
+                    <div class="risk-num">3.2 False or misleading information</div>
+                    <div class="chart-type">Actor Responsibility</div>
+                </a>
+                <a href="Resp_Charts/risk7_resp_actors_chart.html" class="chart-link">
+                    <div class="risk-num">3.1 Pollution of information ecosystem and loss of consensus reality</div>
+                    <div class="chart-type">Actor Responsibility</div>
+                </a>
+                <a href="Resp_Charts/risk8_resp_actors_chart.html" class="chart-link">
+                    <div class="risk-num">4.1 Disinformation, surveillance, and influence at scale</div>
+                    <div class="chart-type">Actor Responsibility</div>
+                </a>
+                <a href="Resp_Charts/risk9_resp_actors_chart.html" class="chart-link">
+                    <div class="risk-num">4.3 Cyberattacks, weapon development or use, and mass harm</div>
+                    <div class="chart-type">Actor Responsibility</div>
+                </a>
+                <a href="Resp_Charts/risk10_resp_actors_chart.html" class="chart-link">
+                    <div class="risk-num">4.2 Fraud, scams, and targeted manipulation</div>
+                    <div class="chart-type">Actor Responsibility</div>
+                </a>
+                <a href="Resp_Charts/risk11_resp_actors_chart.html" class="chart-link">
+                    <div class="risk-num">5.1 Overreliance and unsafe use</div>
+                    <div class="chart-type">Actor Responsibility</div>
+                </a>
+                <a href="Resp_Charts/risk12_resp_actors_chart.html" class="chart-link">
+                    <div class="risk-num">5.2 Loss of human agency and autonomy</div>
+                    <div class="chart-type">Actor Responsibility</div>
+                </a>
+                <a href="Resp_Charts/risk13_resp_actors_chart.html" class="chart-link">
+                    <div class="risk-num">6.1 Power centralization and unfair distribution of benefits</div>
+                    <div class="chart-type">Actor Responsibility</div>
+                </a>
+                <a href="Resp_Charts/risk14_resp_actors_chart.html" class="chart-link">
+                    <div class="risk-num">6.2 Increased inequality and decline in employment quality</div>
+                    <div class="chart-type">Actor Responsibility</div>
+                </a>
+                <a href="Resp_Charts/risk15_resp_actors_chart.html" class="chart-link">
+                    <div class="risk-num">6.3 Economic and cultural devaluation of human effort</div>
+                    <div class="chart-type">Actor Responsibility</div>
+                </a>
+                <a href="Resp_Charts/risk16_resp_actors_chart.html" class="chart-link">
+                    <div class="risk-num">6.4 Competitive dynamics</div>
+                    <div class="chart-type">Actor Responsibility</div>
+                </a>
+                <a href="Resp_Charts/risk17_resp_actors_chart.html" class="chart-link">
+                    <div class="risk-num">6.5 Governance failure</div>
+                    <div class="chart-type">Actor Responsibility</div>
+                </a>
+                <a href="Resp_Charts/risk18_resp_actors_chart.html" class="chart-link">
+                    <div class="risk-num">6.6 Environmental harm</div>
+                    <div class="chart-type">Actor Responsibility</div>
+                </a>
+                <a href="Resp_Charts/risk19_resp_actors_chart.html" class="chart-link">
+                    <div class="risk-num">7.1 AI pursuing its own goals in conflict with human goals or values</div>
+                    <div class="chart-type">Actor Responsibility</div>
+                </a>
+                <a href="Resp_Charts/risk20_resp_actors_chart.html" class="chart-link">
+                    <div class="risk-num">7.2 AI possessing dangerous capabilities</div>
+                    <div class="chart-type">Actor Responsibility</div>
+                </a>
+                <a href="Resp_Charts/risk21_resp_actors_chart.html" class="chart-link">
+                    <div class="risk-num">7.3 Lack of capability or robustness</div>
+                    <div class="chart-type">Actor Responsibility</div>
+                </a>
+                <a href="Resp_Charts/risk22_resp_actors_chart.html" class="chart-link">
+                    <div class="risk-num">7.4 Lack of transparency or interpretability</div>
+                    <div class="chart-type">Actor Responsibility</div>
+                </a>
+                <a href="Resp_Charts/risk23_resp_actors_chart.html" class="chart-link">
+                    <div class="risk-num">7.5 AI welfare and rights</div>
+                    <div class="chart-type">Actor Responsibility</div>
+                </a>
+                <a href="Resp_Charts/risk24_resp_actors_chart.html" class="chart-link">
+                    <div class="risk-num">7.6 Multi-agent risks</div>
+                    <div class="chart-type">Actor Responsibility</div>
+                </a>
+            </div>
+        </div>
     </div>
 
-    <div class="chart-category">
-        <h2>Severity Charts - PM (Post-Mitigation)</h2>
-        <ul>
-            <li><a href="Sev_Charts/risk1_pm_chart.html">1.1 Unfair discrimination and misrepresentation - PM</a></li>
-            <li><a href="Sev_Charts/risk2_pm_chart.html">1.2 Exposure to toxic content - PM</a></li>
-            <li><a href="Sev_Charts/risk3_pm_chart.html">1.3 Unequal performance across groups - PM</a></li>
-            <li><a href="Sev_Charts/risk4_pm_chart.html">2.1 Compromise of privacy by obtaining, leaking or correctly inferring sensitive information - PM</a></li>
-            <li><a href="Sev_Charts/risk5_pm_chart.html">2.2 AI system security vulnerabilities and attacks - PM</a></li>
-            <li><a href="Sev_Charts/risk6_pm_chart.html">3.2 False or misleading information - PM</a></li>
-            <li><a href="Sev_Charts/risk7_pm_chart.html">3.1 Pollution of information ecosystem and loss of consensus reality - PM</a></li>
-            <li><a href="Sev_Charts/risk8_pm_chart.html">4.1 Disinformation, surveillance, and influence at scale - PM</a></li>
-            <li><a href="Sev_Charts/risk9_pm_chart.html">4.3 Cyberattacks, weapon development or use, and mass harm - PM</a></li>
-            <li><a href="Sev_Charts/risk10_pm_chart.html">4.2 Fraud, scams, and targeted manipulation - PM</a></li>
-            <li><a href="Sev_Charts/risk11_pm_chart.html">5.1 Overreliance and unsafe use - PM</a></li>
-            <li><a href="Sev_Charts/risk12_pm_chart.html">5.2 Loss of human agency and autonomy - PM</a></li>
-            <li><a href="Sev_Charts/risk13_pm_chart.html">6.1 Power centralization and unfair distribution of benefits - PM</a></li>
-            <li><a href="Sev_Charts/risk14_pm_chart.html">6.2 Increased inequality and decline in employment quality - PM</a></li>
-            <li><a href="Sev_Charts/risk15_pm_chart.html">6.3 Economic and cultural devaluation of human effort - PM</a></li>
-            <li><a href="Sev_Charts/risk16_pm_chart.html">6.4 Competitive dynamics - PM</a></li>
-            <li><a href="Sev_Charts/risk17_pm_chart.html">6.5 Governance failure - PM</a></li>
-            <li><a href="Sev_Charts/risk18_pm_chart.html">6.6 Environmental harm - PM</a></li>
-            <li><a href="Sev_Charts/risk19_pm_chart.html">7.1 AI pursuing its own goals in conflict with human goals or values - PM</a></li>
-            <li><a href="Sev_Charts/risk20_pm_chart.html">7.2 AI possessing dangerous capabilities - PM</a></li>
-            <li><a href="Sev_Charts/risk21_pm_chart.html">7.3 Lack of capability or robustness - PM</a></li>
-            <li><a href="Sev_Charts/risk22_pm_chart.html">7.4 Lack of transparency or interpretability - PM</a></li>
-            <li><a href="Sev_Charts/risk23_pm_chart.html">7.5 AI welfare and rights - PM</a></li>
-            <li><a href="Sev_Charts/risk24_pm_chart.html">7.6 Multi-agent risks - PM</a></li>
-        </ul>
+    <!-- Severity Charts -->
+    <div class="section">
+        <div class="section-title">Severity & Likelihood Charts</div>
+        <p class="section-description">Expert probability distributions for severity outcomes across two scenarios: Business as Usual (BAU) and Pragmatic Mitigations (PM). Charts show individual expert estimates, mean likelihood, and confidence intervals.</p>
+
+        <div class="subsection">
+            <div class="subsection-title">Business as Usual Scenario</div>
+            <div class="chart-grid">
+                <a href="Sev_Charts/risk1_bau_chart.html" class="chart-link">
+                    <div class="risk-num">1.1 Unfair discrimination and misrepresentation</div>
+                    <div class="chart-type">BAU Severity</div>
+                </a>
+                <a href="Sev_Charts/risk2_bau_chart.html" class="chart-link">
+                    <div class="risk-num">1.2 Exposure to toxic content</div>
+                    <div class="chart-type">BAU Severity</div>
+                </a>
+                <a href="Sev_Charts/risk3_bau_chart.html" class="chart-link">
+                    <div class="risk-num">1.3 Unequal performance across groups</div>
+                    <div class="chart-type">BAU Severity</div>
+                </a>
+                <a href="Sev_Charts/risk4_bau_chart.html" class="chart-link">
+                    <div class="risk-num">2.1 Compromise of privacy by obtaining, leaking or correctly inferring sensitive information</div>
+                    <div class="chart-type">BAU Severity</div>
+                </a>
+                <a href="Sev_Charts/risk5_bau_chart.html" class="chart-link">
+                    <div class="risk-num">2.2 AI system security vulnerabilities and attacks</div>
+                    <div class="chart-type">BAU Severity</div>
+                </a>
+                <a href="Sev_Charts/risk6_bau_chart.html" class="chart-link">
+                    <div class="risk-num">3.2 False or misleading information</div>
+                    <div class="chart-type">BAU Severity</div>
+                </a>
+                <a href="Sev_Charts/risk7_bau_chart.html" class="chart-link">
+                    <div class="risk-num">3.1 Pollution of information ecosystem and loss of consensus reality</div>
+                    <div class="chart-type">BAU Severity</div>
+                </a>
+                <a href="Sev_Charts/risk8_bau_chart.html" class="chart-link">
+                    <div class="risk-num">4.1 Disinformation, surveillance, and influence at scale</div>
+                    <div class="chart-type">BAU Severity</div>
+                </a>
+                <a href="Sev_Charts/risk9_bau_chart.html" class="chart-link">
+                    <div class="risk-num">4.3 Cyberattacks, weapon development or use, and mass harm</div>
+                    <div class="chart-type">BAU Severity</div>
+                </a>
+                <a href="Sev_Charts/risk10_bau_chart.html" class="chart-link">
+                    <div class="risk-num">4.2 Fraud, scams, and targeted manipulation</div>
+                    <div class="chart-type">BAU Severity</div>
+                </a>
+                <a href="Sev_Charts/risk11_bau_chart.html" class="chart-link">
+                    <div class="risk-num">5.1 Overreliance and unsafe use</div>
+                    <div class="chart-type">BAU Severity</div>
+                </a>
+                <a href="Sev_Charts/risk12_bau_chart.html" class="chart-link">
+                    <div class="risk-num">5.2 Loss of human agency and autonomy</div>
+                    <div class="chart-type">BAU Severity</div>
+                </a>
+                <a href="Sev_Charts/risk13_bau_chart.html" class="chart-link">
+                    <div class="risk-num">6.1 Power centralization and unfair distribution of benefits</div>
+                    <div class="chart-type">BAU Severity</div>
+                </a>
+                <a href="Sev_Charts/risk14_bau_chart.html" class="chart-link">
+                    <div class="risk-num">6.2 Increased inequality and decline in employment quality</div>
+                    <div class="chart-type">BAU Severity</div>
+                </a>
+                <a href="Sev_Charts/risk15_bau_chart.html" class="chart-link">
+                    <div class="risk-num">6.3 Economic and cultural devaluation of human effort</div>
+                    <div class="chart-type">BAU Severity</div>
+                </a>
+                <a href="Sev_Charts/risk16_bau_chart.html" class="chart-link">
+                    <div class="risk-num">6.4 Competitive dynamics</div>
+                    <div class="chart-type">BAU Severity</div>
+                </a>
+                <a href="Sev_Charts/risk17_bau_chart.html" class="chart-link">
+                    <div class="risk-num">6.5 Governance failure</div>
+                    <div class="chart-type">BAU Severity</div>
+                </a>
+                <a href="Sev_Charts/risk18_bau_chart.html" class="chart-link">
+                    <div class="risk-num">6.6 Environmental harm</div>
+                    <div class="chart-type">BAU Severity</div>
+                </a>
+                <a href="Sev_Charts/risk19_bau_chart.html" class="chart-link">
+                    <div class="risk-num">7.1 AI pursuing its own goals in conflict with human goals or values</div>
+                    <div class="chart-type">BAU Severity</div>
+                </a>
+                <a href="Sev_Charts/risk20_bau_chart.html" class="chart-link">
+                    <div class="risk-num">7.2 AI possessing dangerous capabilities</div>
+                    <div class="chart-type">BAU Severity</div>
+                </a>
+                <a href="Sev_Charts/risk21_bau_chart.html" class="chart-link">
+                    <div class="risk-num">7.3 Lack of capability or robustness</div>
+                    <div class="chart-type">BAU Severity</div>
+                </a>
+                <a href="Sev_Charts/risk22_bau_chart.html" class="chart-link">
+                    <div class="risk-num">7.4 Lack of transparency or interpretability</div>
+                    <div class="chart-type">BAU Severity</div>
+                </a>
+                <a href="Sev_Charts/risk23_bau_chart.html" class="chart-link">
+                    <div class="risk-num">7.5 AI welfare and rights</div>
+                    <div class="chart-type">BAU Severity</div>
+                </a>
+                <a href="Sev_Charts/risk24_bau_chart.html" class="chart-link">
+                    <div class="risk-num">7.6 Multi-agent risks</div>
+                    <div class="chart-type">BAU Severity</div>
+                </a>
+            </div>
+        </div>
+
+        <div class="subsection">
+            <div class="subsection-title">Pragmatic Mitigations Scenario</div>
+            <div class="chart-grid">
+                <a href="Sev_Charts/risk1_pm_chart.html" class="chart-link">
+                    <div class="risk-num">1.1 Unfair discrimination and misrepresentation</div>
+                    <div class="chart-type">PM Severity</div>
+                </a>
+                <a href="Sev_Charts/risk2_pm_chart.html" class="chart-link">
+                    <div class="risk-num">1.2 Exposure to toxic content</div>
+                    <div class="chart-type">PM Severity</div>
+                </a>
+                <a href="Sev_Charts/risk3_pm_chart.html" class="chart-link">
+                    <div class="risk-num">1.3 Unequal performance across groups</div>
+                    <div class="chart-type">PM Severity</div>
+                </a>
+                <a href="Sev_Charts/risk4_pm_chart.html" class="chart-link">
+                    <div class="risk-num">2.1 Compromise of privacy by obtaining, leaking or correctly inferring sensitive information</div>
+                    <div class="chart-type">PM Severity</div>
+                </a>
+                <a href="Sev_Charts/risk5_pm_chart.html" class="chart-link">
+                    <div class="risk-num">2.2 AI system security vulnerabilities and attacks</div>
+                    <div class="chart-type">PM Severity</div>
+                </a>
+                <a href="Sev_Charts/risk6_pm_chart.html" class="chart-link">
+                    <div class="risk-num">3.2 False or misleading information</div>
+                    <div class="chart-type">PM Severity</div>
+                </a>
+                <a href="Sev_Charts/risk7_pm_chart.html" class="chart-link">
+                    <div class="risk-num">3.1 Pollution of information ecosystem and loss of consensus reality</div>
+                    <div class="chart-type">PM Severity</div>
+                </a>
+                <a href="Sev_Charts/risk8_pm_chart.html" class="chart-link">
+                    <div class="risk-num">4.1 Disinformation, surveillance, and influence at scale</div>
+                    <div class="chart-type">PM Severity</div>
+                </a>
+                <a href="Sev_Charts/risk9_pm_chart.html" class="chart-link">
+                    <div class="risk-num">4.3 Cyberattacks, weapon development or use, and mass harm</div>
+                    <div class="chart-type">PM Severity</div>
+                </a>
+                <a href="Sev_Charts/risk10_pm_chart.html" class="chart-link">
+                    <div class="risk-num">4.2 Fraud, scams, and targeted manipulation</div>
+                    <div class="chart-type">PM Severity</div>
+                </a>
+                <a href="Sev_Charts/risk11_pm_chart.html" class="chart-link">
+                    <div class="risk-num">5.1 Overreliance and unsafe use</div>
+                    <div class="chart-type">PM Severity</div>
+                </a>
+                <a href="Sev_Charts/risk12_pm_chart.html" class="chart-link">
+                    <div class="risk-num">5.2 Loss of human agency and autonomy</div>
+                    <div class="chart-type">PM Severity</div>
+                </a>
+                <a href="Sev_Charts/risk13_pm_chart.html" class="chart-link">
+                    <div class="risk-num">6.1 Power centralization and unfair distribution of benefits</div>
+                    <div class="chart-type">PM Severity</div>
+                </a>
+                <a href="Sev_Charts/risk14_pm_chart.html" class="chart-link">
+                    <div class="risk-num">6.2 Increased inequality and decline in employment quality</div>
+                    <div class="chart-type">PM Severity</div>
+                </a>
+                <a href="Sev_Charts/risk15_pm_chart.html" class="chart-link">
+                    <div class="risk-num">6.3 Economic and cultural devaluation of human effort</div>
+                    <div class="chart-type">PM Severity</div>
+                </a>
+                <a href="Sev_Charts/risk16_pm_chart.html" class="chart-link">
+                    <div class="risk-num">6.4 Competitive dynamics</div>
+                    <div class="chart-type">PM Severity</div>
+                </a>
+                <a href="Sev_Charts/risk17_pm_chart.html" class="chart-link">
+                    <div class="risk-num">6.5 Governance failure</div>
+                    <div class="chart-type">PM Severity</div>
+                </a>
+                <a href="Sev_Charts/risk18_pm_chart.html" class="chart-link">
+                    <div class="risk-num">6.6 Environmental harm</div>
+                    <div class="chart-type">PM Severity</div>
+                </a>
+                <a href="Sev_Charts/risk19_pm_chart.html" class="chart-link">
+                    <div class="risk-num">7.1 AI pursuing its own goals in conflict with human goals or values</div>
+                    <div class="chart-type">PM Severity</div>
+                </a>
+                <a href="Sev_Charts/risk20_pm_chart.html" class="chart-link">
+                    <div class="risk-num">7.2 AI possessing dangerous capabilities</div>
+                    <div class="chart-type">PM Severity</div>
+                </a>
+                <a href="Sev_Charts/risk21_pm_chart.html" class="chart-link">
+                    <div class="risk-num">7.3 Lack of capability or robustness</div>
+                    <div class="chart-type">PM Severity</div>
+                </a>
+                <a href="Sev_Charts/risk22_pm_chart.html" class="chart-link">
+                    <div class="risk-num">7.4 Lack of transparency or interpretability</div>
+                    <div class="chart-type">PM Severity</div>
+                </a>
+                <a href="Sev_Charts/risk23_pm_chart.html" class="chart-link">
+                    <div class="risk-num">7.5 AI welfare and rights</div>
+                    <div class="chart-type">PM Severity</div>
+                </a>
+                <a href="Sev_Charts/risk24_pm_chart.html" class="chart-link">
+                    <div class="risk-num">7.6 Multi-agent risks</div>
+                    <div class="chart-type">PM Severity</div>
+                </a>
+            </div>
+        </div>
     </div>
 
-    <div class="chart-category">
-        <h2>Vulnerability Actors Charts</h2>
-        <ul>
-            <li><a href="Vuln_Charts/risk1_vuln_actors_chart.html">1.1 Unfair discrimination and misrepresentation - Vulnerability Actors</a></li>
-            <li><a href="Vuln_Charts/risk2_vuln_actors_chart.html">1.2 Exposure to toxic content - Vulnerability Actors</a></li>
-            <li><a href="Vuln_Charts/risk3_vuln_actors_chart.html">1.3 Unequal performance across groups - Vulnerability Actors</a></li>
-            <li><a href="Vuln_Charts/risk4_vuln_actors_chart.html">2.1 Compromise of privacy by obtaining, leaking or correctly inferring sensitive information - Vulnerability Actors</a></li>
-            <li><a href="Vuln_Charts/risk5_vuln_actors_chart.html">2.2 AI system security vulnerabilities and attacks - Vulnerability Actors</a></li>
-            <li><a href="Vuln_Charts/risk6_vuln_actors_chart.html">3.2 False or misleading information - Vulnerability Actors</a></li>
-            <li><a href="Vuln_Charts/risk7_vuln_actors_chart.html">3.1 Pollution of information ecosystem and loss of consensus reality - Vulnerability Actors</a></li>
-            <li><a href="Vuln_Charts/risk8_vuln_actors_chart.html">4.1 Disinformation, surveillance, and influence at scale - Vulnerability Actors</a></li>
-            <li><a href="Vuln_Charts/risk9_vuln_actors_chart.html">4.3 Cyberattacks, weapon development or use, and mass harm - Vulnerability Actors</a></li>
-            <li><a href="Vuln_Charts/risk10_vuln_actors_chart.html">4.2 Fraud, scams, and targeted manipulation - Vulnerability Actors</a></li>
-            <li><a href="Vuln_Charts/risk11_vuln_actors_chart.html">5.1 Overreliance and unsafe use - Vulnerability Actors</a></li>
-            <li><a href="Vuln_Charts/risk12_vuln_actors_chart.html">5.2 Loss of human agency and autonomy - Vulnerability Actors</a></li>
-            <li><a href="Vuln_Charts/risk13_vuln_actors_chart.html">6.1 Power centralization and unfair distribution of benefits - Vulnerability Actors</a></li>
-            <li><a href="Vuln_Charts/risk14_vuln_actors_chart.html">6.2 Increased inequality and decline in employment quality - Vulnerability Actors</a></li>
-            <li><a href="Vuln_Charts/risk15_vuln_actors_chart.html">6.3 Economic and cultural devaluation of human effort - Vulnerability Actors</a></li>
-            <li><a href="Vuln_Charts/risk16_vuln_actors_chart.html">6.4 Competitive dynamics - Vulnerability Actors</a></li>
-            <li><a href="Vuln_Charts/risk17_vuln_actors_chart.html">6.5 Governance failure - Vulnerability Actors</a></li>
-            <li><a href="Vuln_Charts/risk18_vuln_actors_chart.html">6.6 Environmental harm - Vulnerability Actors</a></li>
-            <li><a href="Vuln_Charts/risk19_vuln_actors_chart.html">7.1 AI pursuing its own goals in conflict with human goals or values - Vulnerability Actors</a></li>
-            <li><a href="Vuln_Charts/risk20_vuln_actors_chart.html">7.2 AI possessing dangerous capabilities - Vulnerability Actors</a></li>
-            <li><a href="Vuln_Charts/risk21_vuln_actors_chart.html">7.3 Lack of capability or robustness - Vulnerability Actors</a></li>
-            <li><a href="Vuln_Charts/risk22_vuln_actors_chart.html">7.4 Lack of transparency or interpretability - Vulnerability Actors</a></li>
-            <li><a href="Vuln_Charts/risk23_vuln_actors_chart.html">7.5 AI welfare and rights - Vulnerability Actors</a></li>
-            <li><a href="Vuln_Charts/risk24_vuln_actors_chart.html">7.6 Multi-agent risks - Vulnerability Actors</a></li>
-        </ul>
-    </div>
-
-    <div class="chart-category">
-        <h2>Responsibility Actors Charts</h2>
-        <ul>
-            <li><a href="Resp_Charts/risk1_resp_actors_chart.html">1.1 Unfair discrimination and misrepresentation - Responsibility Actors</a></li>
-            <li><a href="Resp_Charts/risk2_resp_actors_chart.html">1.2 Exposure to toxic content - Responsibility Actors</a></li>
-            <li><a href="Resp_Charts/risk3_resp_actors_chart.html">1.3 Unequal performance across groups - Responsibility Actors</a></li>
-            <li><a href="Resp_Charts/risk4_resp_actors_chart.html">2.1 Compromise of privacy by obtaining, leaking or correctly inferring sensitive information - Responsibility Actors</a></li>
-            <li><a href="Resp_Charts/risk5_resp_actors_chart.html">2.2 AI system security vulnerabilities and attacks - Responsibility Actors</a></li>
-            <li><a href="Resp_Charts/risk6_resp_actors_chart.html">3.2 False or misleading information - Responsibility Actors</a></li>
-            <li><a href="Resp_Charts/risk7_resp_actors_chart.html">3.1 Pollution of information ecosystem and loss of consensus reality - Responsibility Actors</a></li>
-            <li><a href="Resp_Charts/risk8_resp_actors_chart.html">4.1 Disinformation, surveillance, and influence at scale - Responsibility Actors</a></li>
-            <li><a href="Resp_Charts/risk9_resp_actors_chart.html">4.3 Cyberattacks, weapon development or use, and mass harm - Responsibility Actors</a></li>
-            <li><a href="Resp_Charts/risk10_resp_actors_chart.html">4.2 Fraud, scams, and targeted manipulation - Responsibility Actors</a></li>
-            <li><a href="Resp_Charts/risk11_resp_actors_chart.html">5.1 Overreliance and unsafe use - Responsibility Actors</a></li>
-            <li><a href="Resp_Charts/risk12_resp_actors_chart.html">5.2 Loss of human agency and autonomy - Responsibility Actors</a></li>
-            <li><a href="Resp_Charts/risk13_resp_actors_chart.html">6.1 Power centralization and unfair distribution of benefits - Responsibility Actors</a></li>
-            <li><a href="Resp_Charts/risk14_resp_actors_chart.html">6.2 Increased inequality and decline in employment quality - Responsibility Actors</a></li>
-            <li><a href="Resp_Charts/risk15_resp_actors_chart.html">6.3 Economic and cultural devaluation of human effort - Responsibility Actors</a></li>
-            <li><a href="Resp_Charts/risk16_resp_actors_chart.html">6.4 Competitive dynamics - Responsibility Actors</a></li>
-            <li><a href="Resp_Charts/risk17_resp_actors_chart.html">6.5 Governance failure - Responsibility Actors</a></li>
-            <li><a href="Resp_Charts/risk18_resp_actors_chart.html">6.6 Environmental harm - Responsibility Actors</a></li>
-            <li><a href="Resp_Charts/risk19_resp_actors_chart.html">7.1 AI pursuing its own goals in conflict with human goals or values - Responsibility Actors</a></li>
-            <li><a href="Resp_Charts/risk20_resp_actors_chart.html">7.2 AI possessing dangerous capabilities - Responsibility Actors</a></li>
-            <li><a href="Resp_Charts/risk21_resp_actors_chart.html">7.3 Lack of capability or robustness - Responsibility Actors</a></li>
-            <li><a href="Resp_Charts/risk22_resp_actors_chart.html">7.4 Lack of transparency or interpretability - Responsibility Actors</a></li>
-            <li><a href="Resp_Charts/risk23_resp_actors_chart.html">7.5 AI welfare and rights - Responsibility Actors</a></li>
-            <li><a href="Resp_Charts/risk24_resp_actors_chart.html">7.6 Multi-agent risks - Responsibility Actors</a></li>
-        </ul>
-    </div>
-
-    <div class="chart-category">
-        <h2>Sector Vulnerability Charts</h2>
-        <ul>
-            <li><a href="Sec_Charts/risk_1_sector_vulnerability.html">1.1 Unfair discrimination and misrepresentation - Sector Vulnerability</a></li>
-            <li><a href="Sec_Charts/risk_2_sector_vulnerability.html">1.2 Exposure to toxic content - Sector Vulnerability</a></li>
-            <li><a href="Sec_Charts/risk_3_sector_vulnerability.html">1.3 Unequal performance across groups - Sector Vulnerability</a></li>
-            <li><a href="Sec_Charts/risk_4_sector_vulnerability.html">2.1 Compromise of privacy by obtaining, leaking or correctly inferring sensitive information - Sector Vulnerability</a></li>
-            <li><a href="Sec_Charts/risk_5_sector_vulnerability.html">2.2 AI system security vulnerabilities and attacks - Sector Vulnerability</a></li>
-            <li><a href="Sec_Charts/risk_6_sector_vulnerability.html">3.2 False or misleading information - Sector Vulnerability</a></li>
-            <li><a href="Sec_Charts/risk_7_sector_vulnerability.html">3.1 Pollution of information ecosystem and loss of consensus reality - Sector Vulnerability</a></li>
-            <li><a href="Sec_Charts/risk_8_sector_vulnerability.html">4.1 Disinformation, surveillance, and influence at scale - Sector Vulnerability</a></li>
-            <li><a href="Sec_Charts/risk_9_sector_vulnerability.html">4.3 Cyberattacks, weapon development or use, and mass harm - Sector Vulnerability</a></li>
-            <li><a href="Sec_Charts/risk_10_sector_vulnerability.html">4.2 Fraud, scams, and targeted manipulation - Sector Vulnerability</a></li>
-            <li><a href="Sec_Charts/risk_11_sector_vulnerability.html">5.1 Overreliance and unsafe use - Sector Vulnerability</a></li>
-            <li><a href="Sec_Charts/risk_12_sector_vulnerability.html">5.2 Loss of human agency and autonomy - Sector Vulnerability</a></li>
-            <li><a href="Sec_Charts/risk_13_sector_vulnerability.html">6.1 Power centralization and unfair distribution of benefits - Sector Vulnerability</a></li>
-            <li><a href="Sec_Charts/risk_14_sector_vulnerability.html">6.2 Increased inequality and decline in employment quality - Sector Vulnerability</a></li>
-            <li><a href="Sec_Charts/risk_15_sector_vulnerability.html">6.3 Economic and cultural devaluation of human effort - Sector Vulnerability</a></li>
-            <li><a href="Sec_Charts/risk_16_sector_vulnerability.html">6.4 Competitive dynamics - Sector Vulnerability</a></li>
-            <li><a href="Sec_Charts/risk_17_sector_vulnerability.html">6.5 Governance failure - Sector Vulnerability</a></li>
-            <li><a href="Sec_Charts/risk_18_sector_vulnerability.html">6.6 Environmental harm - Sector Vulnerability</a></li>
-            <li><a href="Sec_Charts/risk_19_sector_vulnerability.html">7.1 AI pursuing its own goals in conflict with human goals or values - Sector Vulnerability</a></li>
-            <li><a href="Sec_Charts/risk_20_sector_vulnerability.html">7.2 AI possessing dangerous capabilities - Sector Vulnerability</a></li>
-            <li><a href="Sec_Charts/risk_21_sector_vulnerability.html">7.3 Lack of capability or robustness - Sector Vulnerability</a></li>
-            <li><a href="Sec_Charts/risk_22_sector_vulnerability.html">7.4 Lack of transparency or interpretability - Sector Vulnerability</a></li>
-            <li><a href="Sec_Charts/risk_23_sector_vulnerability.html">7.5 AI welfare and rights - Sector Vulnerability</a></li>
-            <li><a href="Sec_Charts/risk_24_sector_vulnerability.html">7.6 Multi-agent risks - Sector Vulnerability</a></li>
-        </ul>
-    </div>
 </body>
 </html>
