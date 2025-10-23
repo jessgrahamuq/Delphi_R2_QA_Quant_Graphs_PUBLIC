@@ -2372,8 +2372,8 @@
             chart.update('none');
         });
 
-        // Fix blurry canvas on high-DPI displays
-        const dpr = window.devicePixelRatio || 2;
+        // Fix blurry canvas on high-DPI displays - force 4x resolution
+        const dpr = Math.max(window.devicePixelRatio || 1, 4);
         const canvas = document.getElementById('severityChart');
         const rect = canvas.getBoundingClientRect();
         canvas.width = rect.width * dpr;
@@ -2403,7 +2403,7 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                devicePixelRatio: window.devicePixelRatio || 2,
+                devicePixelRatio: Math.max(window.devicePixelRatio || 1, 4),
                 interaction: {
                     mode: 'nearest',
                     intersect: true
