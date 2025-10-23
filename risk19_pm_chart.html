@@ -3006,13 +3006,6 @@
             }
         };
 
-        // Fix blurry canvas on high-DPI displays
-        const dpr = window.devicePixelRatio || 1;
-        const rect = canvas.getBoundingClientRect();
-        canvas.width = rect.width * dpr;
-        canvas.height = rect.height * dpr;
-        ctx.scale(dpr, dpr);
-
         // Add mouse move handler for hover interaction
         const chartCanvas = document.getElementById('severityChart');
         const tooltip = document.getElementById('expertTooltip');
@@ -3121,6 +3114,13 @@
             tooltip.classList.remove('visible');
             chart.update('none');
         });
+
+        // Fix blurry canvas on high-DPI displays
+        const dpr = window.devicePixelRatio || 1;
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        ctx.scale(dpr, dpr);
 
         const chart = new Chart(ctx, {
             type: 'line',
