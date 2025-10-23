@@ -164,17 +164,22 @@
             position: relative;
             width: calc(100% - 40px);
         }
-        .severity-label {
-            font-size: 17px;
+                .severity-label {
+            font-size: 14px;
             font-weight: bold;
-            white-space: nowrap;
+            white-space: normal;
             position: absolute;
+            max-width: 18%;
+            text-align: center;
+            line-height: 1.2;
+            word-wrap: break-word;
+            hyphens: auto;
         }
-        .severity-label:nth-child(1) { left: 8%; transform: translateX(0%); }
-        .severity-label:nth-child(2) { left: 32%; transform: translateX(-50%); }
-        .severity-label:nth-child(3) { left: 52%; transform: translateX(-50%); }
-        .severity-label:nth-child(4) { left: 70%; transform: translateX(-50%); }
-        .severity-label:nth-child(5) { left: 95%; transform: translateX(-100%); }
+        .severity-label:nth-child(1) { left: 9%; transform: translateX(-50%); }
+        .severity-label:nth-child(2) { left: 28%; transform: translateX(-50%); }
+        .severity-label:nth-child(3) { left: 50%; transform: translateX(-50%); }
+        .severity-label:nth-child(4) { left: 72%; transform: translateX(-50%); }
+        .severity-label:nth-child(5) { left: 91%; transform: translateX(-50%); }
         .expert-tooltip {
             position: absolute;
             background: white;
@@ -200,6 +205,13 @@
             canvas {
             image-rendering: -webkit-optimize-contrast;
             image-rendering: crisp-edges;
+        }
+
+        @media (max-width: 600px) {
+            .severity-label {
+                font-size: 11px;
+                max-width: 19%;
+            }
         }
 </style>
 </head>
