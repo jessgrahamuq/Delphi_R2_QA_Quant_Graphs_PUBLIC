@@ -2558,7 +2558,6 @@
 
         // Fix blurry canvas on high-DPI displays
         const dpr = window.devicePixelRatio || 1;
-        const canvas = document.getElementById('severityChart');
         const rect = canvas.getBoundingClientRect();
         canvas.width = rect.width * dpr;
         canvas.height = rect.height * dpr;
