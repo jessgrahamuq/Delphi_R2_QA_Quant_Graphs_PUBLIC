@@ -2695,7 +2695,17 @@
         const severityColors = ['#28a745', '#6c757d', '#ffc107', '#fd7e14', '#dc3545'];
 
         // Create chart with custom plugin for colored squares
-        const ctx = document.getElementById('severityChart').getContext('2d');
+        // Fix blurry canvas FIRST - set dimensions before getting context
+        const canvas = document.getElementById('severityChart');
+        const rect = canvas.getBoundingClientRect();
+        const dpr = Math.max(window.devicePixelRatio || 1, 4);
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        canvas.style.width = rect.width + 'px';
+        canvas.style.height = rect.height + 'px';
+
+        const ctx = canvas.getContext('2d');
+        ctx.scale(dpr, dpr);
 
         // Track hover state
         let hoveredExpertIndex = null;
@@ -2971,16 +2981,6 @@
             tooltip.classList.remove('visible');
             chart.update('none');
         });
-
-        // Fix blurry canvas on high-DPI displays - force 4x resolution
-        const dpr = Math.max(window.devicePixelRatio || 1, 4);
-        const canvas = document.getElementById('severityChart');
-        const rect = canvas.getBoundingClientRect();
-        canvas.width = rect.width * dpr;
-        canvas.height = rect.height * dpr;
-        canvas.style.width = rect.width + 'px';
-        canvas.style.height = rect.height + 'px';
-        ctx.scale(dpr, dpr);
 
         const chart = new Chart(ctx, {
             type: 'line',
