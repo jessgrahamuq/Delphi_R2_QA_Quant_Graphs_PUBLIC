@@ -5,8 +5,12 @@
       "Bash(for i in {1..24})",
       "Bash(do grep -A2 \"risk$i_bau_chart.html\" index.html)",
       "Bash(git add:*)",
+<<<<<<< HEAD
       "Bash(git commit:*)",
       "Bash(git reset:*)"
+=======
+      "Bash(git commit:*)"
+>>>>>>> 5999dc42eb36b5e6534a0a0b896acceda04d0073
     ],
     "deny": [],
     "ask": []
